@@ -30,7 +30,7 @@ You need a Mac with Xcode and an iPhone running iOS 17 or newer. There is no sig
 ```sh
 git clone https://github.com/desigrit/kaptus-ios.git
 cd kaptus-ios
-brew install cmake xcodegen
+brew install cmake xcodegen python
 bash scripts/bootstrap.sh
 open Kaptus.xcodeproj
 ```
