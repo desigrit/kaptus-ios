@@ -7,5 +7,5 @@ for TOOL in xcodebuild cmake xcodegen python3; do
 done
 python3 scripts/fetch_dependencies.py
 bash scripts/build_native.sh
-xcodegen generate
+bash scripts/prepare_test_audio.sh
 echo "Ready. Open Kaptus.xcodeproj, select your Apple team, and run on an iPhone."

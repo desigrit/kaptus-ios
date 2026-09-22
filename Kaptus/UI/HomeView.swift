@@ -3,19 +3,27 @@ import KaptusCore
 
 struct HomeView: View {
     @EnvironmentObject private var store: AppStore
+    @Environment(\.dynamicTypeSize) private var dynamicType
     var body: some View {
         NavigationStack {
             List {
                 Section {
                     VStack(alignment: .leading, spacing: 24) {
+                        if dynamicType.isAccessibilitySize {
+                            VStack(alignment: .leading, spacing: 10) {
+                                Text("Follow every line.").font(.title2.bold()).fixedSize(horizontal: false, vertical: true)
+                                Text("Choose your captions.").font(.body).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
+                            }
+                        } else {
                         HStack(alignment: .top, spacing: 20) {
                             VStack(alignment: .leading, spacing: 10) {
                                 Text("Follow every line.").font(.largeTitle.bold()).fixedSize(horizontal: false, vertical: true)
                                 Text("Find your story. We'll find your place.")
-                                    .font(.body).foregroundStyle(.secondary)
+                                    .font(.body).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
                             }
                             Spacer(minLength: 0)
                             Wordbird(size: 68)
+                        }
                         }
                         VStack(spacing: 12) {
                             PrimaryAction(title: "Find a movie or TV show", symbol: "magnifyingglass") { store.searchRequested = true }

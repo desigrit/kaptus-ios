@@ -16,9 +16,12 @@ struct SearchView: View {
         List {
             if !store.credentials.isConfigured {
                 Section {
-                    EmptyState(title: "Bring your own key", message: "Add your OpenSubtitles API key to find movies and TV episodes. You can always open an SRT file without one.", symbol: "key")
-                    Button("Set up OpenSubtitles") { store.settingsPresented = true }.frame(minHeight: 44)
-                    Button("Open SRT file") { store.importPresented = true }.frame(minHeight: 44)
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Bring your own key").font(.headline)
+                        Text("Connect OpenSubtitles to search for captions.").foregroundStyle(.secondary)
+                    }.fixedSize(horizontal: false, vertical: true).padding(.vertical, 8)
+                    Button("Set up OpenSubtitles") { store.settingsPresented = true }.frame(minHeight: 44).accessibilityIdentifier("search.setup")
+                    Button("Open SRT file") { store.importPresented = true }.frame(minHeight: 44).accessibilityIdentifier("search.import")
                 }
             } else if let errorMessage {
                 Section {

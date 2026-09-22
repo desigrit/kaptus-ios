@@ -33,8 +33,7 @@ jobs:
           key: whisper-927cfce-base-en-q5-1-v1-${{ runner.arch }}
       - name: Prepare bundled recognizer and models
         run: |
-          bash scripts/bootstrap.sh
-          bash scripts/prepare_test_audio.sh
+          bash scripts/bootstrap.sh > native-build.log 2>&1 || { tail -120 native-build.log; exit 1; }
       - name: Cache verified native build
         uses: actions/cache/save@v4
         with:
@@ -48,12 +47,13 @@ jobs:
       - name: Verify offline iPhone bundle
         run: python3 scripts/verify_bundle.py DerivedData/Build/Products/Release-iphoneos/Kaptus.app
       - name: Run iPhone simulator tests
+        timeout-minutes: 15
         run: |
           DEVICE=$(xcrun simctl list devices available -j | python3 -c 'import json,sys; d=json.load(sys.stdin); print(next(v["udid"] for k,vs in d["devices"].items() if "iOS" in k for v in vs if "iPhone" in v["name"]))')
           echo "KAPTUS_SIMULATOR=$DEVICE" >> "$GITHUB_ENV"
           xcrun simctl boot "$DEVICE" || true
           xcrun simctl bootstatus "$DEVICE" -b
-          xcodebuild -project Kaptus.xcodeproj -scheme Kaptus -configuration Debug -destination "platform=iOS Simulator,id=$DEVICE" -derivedDataPath DerivedData -resultBundlePath artifacts/UITests.xcresult CODE_SIGNING_ALLOWED=YES CODE_SIGN_IDENTITY=- test > simulator-test.log 2>&1 || { tail -160 simulator-test.log; exit 1; }
+          xcodebuild -project Kaptus.xcodeproj -scheme Kaptus -configuration Debug -destination "platform=iOS Simulator,id=$DEVICE" -derivedDataPath DerivedData -resultBundlePath artifacts/UITests.xcresult -test-timeouts-enabled YES -default-test-execution-time-allowance 120 -maximum-test-execution-time-allowance 180 CODE_SIGNING_ALLOWED=YES CODE_SIGN_IDENTITY=- test > simulator-test.log 2>&1 || { tail -160 simulator-test.log; exit 1; }
       - name: Capture native simulator screens
         if: always() && env.KAPTUS_SIMULATOR != ''
         run: |

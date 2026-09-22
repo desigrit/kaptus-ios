@@ -54,7 +54,10 @@ final class KaptusUITests: XCTestCase {
         app.launch()
         XCTAssertTrue(app.buttons["home.find"].waitForExistence(timeout: 10))
         app.buttons["home.find"].tap()
-        XCTAssertTrue(app.buttons["Set up OpenSubtitles"].waitForExistence(timeout: 5))
-        XCTAssertTrue(app.buttons["Open SRT file"].exists)
+        XCTAssertTrue(app.navigationBars["Find your story"].waitForExistence(timeout: 5))
+        for _ in 0..<3 where !app.buttons["search.setup"].isHittable { app.swipeUp() }
+        XCTAssertTrue(app.buttons["search.setup"].isHittable)
+        for _ in 0..<2 where !app.buttons["search.import"].isHittable { app.swipeUp() }
+        XCTAssertTrue(app.buttons["search.import"].isHittable)
     }
 }
