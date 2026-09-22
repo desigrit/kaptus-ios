@@ -2,7 +2,9 @@ name: iOS
 on:
   push:
     branches: [main]
+    paths-ignore: ["**.md", "docs/**", ".impeccable/**"]
   pull_request:
+    paths-ignore: ["**.md", "docs/**", ".impeccable/**"]
   workflow_dispatch:
 permissions:
   contents: read
