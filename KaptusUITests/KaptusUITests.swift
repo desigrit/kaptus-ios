@@ -21,7 +21,13 @@ final class KaptusUITests: XCTestCase {
         XCUIDevice.shared.orientation = .landscapeLeft
         XCTAssertTrue(app.staticTexts["player.caption"].exists)
         XCTAssertTrue(app.buttons["player.play"].label.contains("Play"))
-        let landscape = XCTAttachment(screenshot: app.screenshot())
+        let rotated = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in app.frame.width > app.frame.height }, object: app)
+        XCTAssertEqual(XCTWaiter.wait(for: [rotated], timeout: 5), .completed)
+        Thread.sleep(forTimeInterval: 1)
+        let captionFrame = app.staticTexts["player.caption"].frame
+        XCTAssertGreaterThanOrEqual(captionFrame.minX, app.frame.minX)
+        XCTAssertLessThanOrEqual(captionFrame.maxX, app.frame.maxX)
+        let landscape = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
         landscape.name = "player-landscape"
         landscape.lifetime = .keepAlways
         add(landscape)
