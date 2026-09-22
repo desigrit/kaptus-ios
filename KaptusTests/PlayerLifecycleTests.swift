@@ -15,9 +15,9 @@ private final class TestRecognition: SpeechRecognitionEngine {
 }
 @MainActor
 final class PlayerLifecycleTests: XCTestCase {
-    private func player(_ speech: TestRecognition, allowed: Bool = true, timeout: Double = 35) -> PlayerSession {
+    private func player(_ speech: TestRecognition, allowed: Bool = true, timeout: Double = 35, controlsHideSeconds: Double = 4) -> PlayerSession {
         let cues = [CaptionCue(id: 1, start: 500, end: 506, text: "Bring the silver telescope to the old observatory.")]
-        return PlayerSession(title: "Original fixture", tracks: [(.init(metadata: .init(fileID: 1, name: "Fixture"), filename: ""), cues)], speech: speech, permissionProvider: { allowed }, attemptSeconds: timeout)
+        return PlayerSession(title: "Original fixture", tracks: [(.init(metadata: .init(fileID: 1, name: "Fixture"), filename: ""), cues)], speech: speech, permissionProvider: { allowed }, attemptSeconds: timeout, controlsHideSeconds: controlsHideSeconds)
     }
     private func settle() async { try? await Task.sleep(for: .milliseconds(80)) }
     func testMatchStopsMicrophoneAndManualActionsNeverRestartIt() async {
@@ -73,6 +73,20 @@ final class PlayerLifecycleTests: XCTestCase {
         session.seek(to: 502); session.togglePlayback()
         XCTAssertFalse(session.activeCaption.isEmpty)
         XCTAssertEqual(speech.starts, 0)
+    }
+    func testResyncCancelsPendingControlHide() async {
+        let speech = TestRecognition()
+        let session = player(speech, controlsHideSeconds: 0.04)
+        defer { session.close() }
+        session.startInitial(); await settle()
+        session.seek(to: 502)
+        session.togglePlayback() // Schedules a hide while manually playing.
+        session.resync() // Must cancel that pending hide and keep acquisition controls available.
+        await settle()
+        XCTAssertTrue(session.isAcquiring)
+        XCTAssertTrue(session.controlsVisible)
+        XCTAssertTrue(speech.recording)
+        XCTAssertEqual(speech.starts, 2)
     }
     func testTimeoutStopsMicrophone() async {
         let speech = TestRecognition()

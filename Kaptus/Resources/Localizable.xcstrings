@@ -81,16 +81,6 @@
         }
       }
     },
-    "No clear match yet. Wait for dialogue, then tap Re-sync. You can also try another caption track.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "No clear match yet. Wait for dialogue, then tap Re-sync. You can also try another caption track."
-          }
-        }
-      }
-    },
     "Couldn't start listening. Check that another app isn't using the microphone, then try Re-sync.": {
       "localizations": {
         "en": {
@@ -987,6 +977,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Local files work without an account. Online search uses your own OpenSubtitles API key."
+          }
+        }
+      }
+    },
+    "No clear match yet. Tap Re-sync during dialogue, or close the player and open another SRT file from Home.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No clear match yet. Tap Re-sync during dialogue, or close the player and open another SRT file from Home."
           }
         }
       }

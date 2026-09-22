@@ -149,9 +149,9 @@ struct PreparationView: View {
                         } else {
                             PrimaryAction(title: "Watch now", symbol: "play.fill") { Task { await prepare(count: 1, open: true) } }
                             Text("Uses up to 1 download from your provider allowance.").font(.footnote).foregroundStyle(.secondary)
-                            Button { Task { await prepare(count: min(3, tracks.count), open: false) } } label: {
-                                Label("Prepare for theater", systemImage: "arrow.down.circle").frame(maxWidth: .infinity, minHeight: 44)
-                            }.buttonStyle(.bordered)
+                            SecondaryAction(title: "Prepare for theater", symbol: "arrow.down.circle") {
+                                Task { await prepare(count: min(3, tracks.count), open: false) }
+                            }
                             Text("Saves up to \(min(3, tracks.count)) tracks for offline matching. Each new track uses one provider download. Existing saved tracks are reused.")
                                 .font(.footnote).foregroundStyle(.secondary)
                         }

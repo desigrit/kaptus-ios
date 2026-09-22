@@ -12,3 +12,6 @@ xcuserdata/
 .env
 artifacts/
 KaptusTests/Fixtures/*.wav
+
+# Local independent-review evidence; public screenshots live in docs/screenshots.
+.impeccable/review/

@@ -20,9 +20,8 @@ struct WelcomeView: View {
                         PrimaryAction(title: "Find a movie or TV show", symbol: "magnifyingglass") {
                             store.finishOnboarding(); store.searchRequested = true
                         }.accessibilityIdentifier("welcome.find")
-                        Button { store.finishOnboarding(); store.importPresented = true } label: {
-                            Label("Open SRT file", systemImage: "folder").frame(maxWidth: .infinity, minHeight: 44)
-                        }.buttonStyle(.bordered).accessibilityIdentifier("welcome.import")
+                        SecondaryAction(title: "Open SRT file", symbol: "folder") { store.finishOnboarding(); store.importPresented = true }
+                            .accessibilityIdentifier("welcome.import")
                         Text("Local files work without an account. Online search uses your own OpenSubtitles API key.")
                             .font(.footnote).foregroundStyle(.secondary)
                     }

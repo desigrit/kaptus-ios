@@ -28,9 +28,8 @@ struct HomeView: View {
                         VStack(spacing: 12) {
                             PrimaryAction(title: "Find a movie or TV show", symbol: "magnifyingglass") { store.searchRequested = true }
                                 .accessibilityIdentifier("home.find")
-                            Button { store.importPresented = true } label: {
-                                Label("Open SRT file", systemImage: "folder").frame(maxWidth: .infinity, minHeight: 44)
-                            }.buttonStyle(.bordered).accessibilityIdentifier("home.import")
+                            SecondaryAction(title: "Open SRT file", symbol: "folder") { store.importPresented = true }
+                                .accessibilityIdentifier("home.import")
                         }
                         if store.isImporting { ProgressView("Opening captions…") }
                         if !store.credentials.isConfigured {

@@ -24,6 +24,7 @@ final class PlayerSession: ObservableObject, Identifiable {
     private let speech: any SpeechRecognitionEngine
     private let permissionProvider: (() async -> Bool)?
     private let attemptSeconds: Double
+    private let controlsHideSeconds: Double
     private let tracks: [(StoredTrack, [CaptionCue])]
     private var trackIndex = 0
     private var index: CaptionIndex
@@ -43,10 +44,10 @@ final class PlayerSession: ObservableObject, Identifiable {
     var duration: Double { max(1, cues.last?.end ?? 1) }
     var isAcquiring: Bool { state.isAcquiring }
 
-    init(title: String, tracks: [(StoredTrack, [CaptionCue])], demonstration: Bool = false, speech: (any SpeechRecognitionEngine)? = nil, permissionProvider: (() async -> Bool)? = nil, attemptSeconds: Double = SyncTuning.attemptSeconds) {
+    init(title: String, tracks: [(StoredTrack, [CaptionCue])], demonstration: Bool = false, speech: (any SpeechRecognitionEngine)? = nil, permissionProvider: (() async -> Bool)? = nil, attemptSeconds: Double = SyncTuning.attemptSeconds, controlsHideSeconds: Double = 4) {
         self.title = title; self.tracks = tracks; self.demonstration = demonstration
         self.speech = speech ?? SpeechRecognition()
-        self.permissionProvider = permissionProvider; self.attemptSeconds = attemptSeconds
+        self.permissionProvider = permissionProvider; self.attemptSeconds = attemptSeconds; self.controlsHideSeconds = controlsHideSeconds
         cues = tracks[0].1; index = SceneMatcher().buildIndex(tracks[0].1)
         self.speech.onState = { [weak self] in self?.state = $0 }
         self.speech.onSegment = { [weak self] in self?.receive($0) }
@@ -72,6 +73,7 @@ final class PlayerSession: ObservableObject, Identifiable {
     }
     func resync() {
         guard isForeground, !demonstration else { return }
+        hideControlsTask?.cancel()
         acquisition?.cancel(); timeout?.cancel(); speech.stop()
         attempt = UUID(); let token = attempt
         accumulator = TranscriptAccumulator(); microphoneDenied = false
@@ -105,7 +107,7 @@ final class PlayerSession: ObservableObject, Identifiable {
                     try? await Task.sleep(for: .seconds(self?.attemptSeconds ?? SyncTuning.attemptSeconds))
                     guard !Task.isCancelled, let self, self.attempt == token, self.state.isAcquiring else { return }
                     self.speech.stop()
-                    self.state = .needsAttention(String(localized: "No clear match yet. Wait for dialogue, then tap Re-sync. You can also try another caption track."))
+                    self.state = .needsAttention(String(localized: "No clear match yet. Tap Re-sync during dialogue, or close the player and open another SRT file from Home."))
                     self.controlsVisible = true
                 }
             } catch {
@@ -169,8 +171,8 @@ final class PlayerSession: ObservableObject, Identifiable {
         hideControlsTask?.cancel()
         guard clock.isPlaying, !interacting, !state.isAcquiring, !readingSettingsPresented, !UIAccessibility.isVoiceOverRunning else { return }
         hideControlsTask = Task { [weak self] in
-            try? await Task.sleep(for: .seconds(4))
-            guard !Task.isCancelled, let self, self.clock.isPlaying, !self.readingSettingsPresented else { return }
+            try? await Task.sleep(for: .seconds(self?.controlsHideSeconds ?? 4))
+            guard !Task.isCancelled, let self, self.clock.isPlaying, !self.state.isAcquiring, !self.interacting, !self.readingSettingsPresented, !UIAccessibility.isVoiceOverRunning else { return }
             self.controlsVisible = false
         }
     }

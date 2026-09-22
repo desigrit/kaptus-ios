@@ -31,6 +31,23 @@ struct PrimaryAction: View {
         .background(Brand.yellow, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
     }
 }
+struct SecondaryAction: View {
+    @Environment(\.dynamicTypeSize) private var dynamicType
+    let title: LocalizedStringKey
+    let symbol: String
+    let action: () -> Void
+    var body: some View {
+        Button(action: action) {
+            Group {
+                if dynamicType.isAccessibilitySize { Text(title) }
+                else { Label(title, systemImage: symbol) }
+            }
+            .fixedSize(horizontal: false, vertical: true)
+            .multilineTextAlignment(.center)
+            .frame(maxWidth: .infinity, minHeight: 44)
+        }.buttonStyle(.bordered)
+    }
+}
 struct Wordbird: View {
     var size: CGFloat = 72
     var body: some View {
