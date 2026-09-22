@@ -11,3 +11,4 @@ xcuserdata/
 *.mobileprovision
 .env
 artifacts/
+KaptusTests/Fixtures/*.wav

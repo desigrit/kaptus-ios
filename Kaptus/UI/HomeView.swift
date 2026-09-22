@@ -24,7 +24,7 @@ struct HomeView: View {
                                 Label("Open SRT file", systemImage: "folder").frame(maxWidth: .infinity, minHeight: 44)
                             }.buttonStyle(.bordered).accessibilityIdentifier("home.import")
                         }
-                        if store.isImporting { ProgressView("Opening captionsâ€¦") }
+                        if store.isImporting { ProgressView("Opening captions…") }
                         if !store.credentials.isConfigured {
                             Button { store.settingsPresented = true } label: {
                                 Label("Set up OpenSubtitles for online search", systemImage: "key")

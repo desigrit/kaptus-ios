@@ -22,13 +22,13 @@ final class CaptionTests: XCTestCase {
         }
     }
     func testUTF16CaptionFile() throws {
-        let text = "1\n00:00:01,000 --> 00:00:03,000\nCafÃ© by the sea."
+        let text = "1\n00:00:01,000 --> 00:00:03,000\nCafé by the sea."
         let data = try XCTUnwrap(text.data(using: .utf16))
-        XCTAssertEqual(try CaptionParser.parse(data).first?.text, "CafÃ© by the sea.")
+        XCTAssertEqual(try CaptionParser.parse(data).first?.text, "Café by the sea.")
     }
     func testPunctuationSpeakerAndSoundDescriptionsDoNotAffectMatching() {
-        XCTAssertEqual(CaptionNormalizer.tokens("MAYA: [whispering] I can't... <i>believe</i> it's dÃ©jÃ -vu!"), ["i", "cant", "believe", "its", "deja", "vu"])
-        XCTAssertEqual(CaptionNormalizer.tokens("I canâ€™t believe itâ€™s dÃ©jÃ  vu."), ["i", "cant", "believe", "its", "deja", "vu"])
+        XCTAssertEqual(CaptionNormalizer.tokens("MAYA: [whispering] I can't... <i>believe</i> it's déjà-vu!"), ["i", "cant", "believe", "its", "deja", "vu"])
+        XCTAssertEqual(CaptionNormalizer.tokens("I can’t believe it’s déjà vu."), ["i", "cant", "believe", "its", "deja", "vu"])
     }
     func testRankingPrioritizesFullEnglishSDHAndHumanTracks() {
         let tracks = [

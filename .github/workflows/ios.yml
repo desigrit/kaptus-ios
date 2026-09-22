@@ -31,7 +31,9 @@ jobs:
             Kaptus/Resources/Models
           key: whisper-927cfce-base-en-q5-1-v1-${{ runner.arch }}
       - name: Prepare bundled recognizer and models
-        run: bash scripts/bootstrap.sh
+        run: |
+          bash scripts/bootstrap.sh
+          bash scripts/prepare_test_audio.sh
       - name: Compile iPhone release
         run: xcodebuild -project Kaptus.xcodeproj -scheme Kaptus -configuration Release -sdk iphoneos -destination 'generic/platform=iOS' -derivedDataPath DerivedData CODE_SIGNING_ALLOWED=NO build > device-build.log 2>&1 || { tail -120 device-build.log; exit 1; }
       - name: Run iPhone simulator tests

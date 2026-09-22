@@ -27,7 +27,7 @@ public struct MovieCandidate: Codable, Hashable, Sendable, Identifiable {
         self.id = id; self.title = title; self.year = year; self.imdbID = imdbID; self.tmdbID = tmdbID; self.kind = kind
     }
     public func selecting(season: Int, episode: Int) -> Self {
-        var item = Self(id: "\(id)-s\(season)e\(episode)", title: "\(title) Â· S\(String(format: "%02d", season))E\(String(format: "%02d", episode))", year: year, kind: .episode)
+        var item = Self(id: "\(id)-s\(season)e\(episode)", title: "\(title) · S\(String(format: "%02d", season))E\(String(format: "%02d", episode))", year: year, kind: .episode)
         item.parentFeatureID = Int(id); item.parentImdbID = imdbID; item.parentTmdbID = tmdbID
         item.season = season; item.episode = episode
         return item

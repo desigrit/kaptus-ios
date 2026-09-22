@@ -26,7 +26,7 @@ struct SearchView: View {
                     Button("Try again") { retry += 1 }.frame(minHeight: 44)
                 }
             } else if loading {
-                ProgressView("Looking for your storyâ€¦").frame(maxWidth: .infinity).padding()
+                ProgressView("Looking for your story…").frame(maxWidth: .infinity).padding()
             } else if query.trimmingCharacters(in: .whitespacesAndNewlines).count < 2 {
                 EmptyState(title: "What are you watching?", message: "Search by title, then check the year. For a TV show, choose the season and episode next.", symbol: "sparkle.magnifyingglass")
             } else if results.isEmpty {
@@ -134,14 +134,14 @@ struct PreparationView: View {
                         Text(movie.title).font(.title.bold())
                         if let year = movie.year { Text(String(year)).foregroundStyle(.secondary) }
                     }
-                    if loading { ProgressView("Finding English captionsâ€¦") }
+                    if loading { ProgressView("Finding English captions…") }
                     else if tracks.isEmpty && errorMessage == nil {
                         Text("No complete English captions were found. Try opening an SRT file instead.").foregroundStyle(.secondary)
                     } else if !tracks.isEmpty {
                         Label(tracks[0].sdh ? "English, with sound descriptions" : "English captions", systemImage: "captions.bubble")
                         Text("We pick complete captions first, favoring SDH and trusted, human-authored tracks.").font(.subheadline).foregroundStyle(.secondary)
                         if downloading {
-                            ProgressView("Saving captionsâ€¦")
+                            ProgressView("Saving captions…")
                             Text("\(savedCount) saved").font(.footnote).foregroundStyle(.secondary)
                         } else {
                             PrimaryAction(title: "Watch now", symbol: "play.fill") { Task { await prepare(count: 1, open: true) } }

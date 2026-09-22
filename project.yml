@@ -58,6 +58,17 @@ targets:
       - sdk: Accelerate.framework
       - sdk: Metal.framework
       - sdk: MetalKit.framework
+  KaptusTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources: [KaptusTests]
+    dependencies:
+      - target: Kaptus
+      - package: KaptusCore
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.desigrit.kaptus.tests
+        GENERATE_INFOPLIST_FILE: YES
   KaptusUITests:
     type: bundle.ui-testing
     platform: iOS
@@ -74,7 +85,8 @@ schemes:
     build:
       targets:
         Kaptus: all
+        KaptusTests: [test]
         KaptusUITests: [test]
     test:
-      targets: [KaptusUITests]
+      targets: [KaptusTests, KaptusUITests]
       gatherCoverageData: true

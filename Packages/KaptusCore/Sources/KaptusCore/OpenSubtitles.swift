@@ -78,7 +78,7 @@ public actor OpenSubtitlesRepository: SubtitleRepository {
                 if let token { request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization") }
             case 401, 403, 406: throw KaptusError.authentication
             case 429: throw KaptusError.quota
-            case 502, 503, 504 where attempt < 2:
+            case let status where [502, 503, 504].contains(status) && attempt < 2:
                 // Retry reads only. A timed-out or failed download POST can already have consumed quota.
                 guard body == nil else { throw KaptusError.response(response.status) }
                 try await Task.sleep(nanoseconds: UInt64(attempt + 1) * 500_000_000)
