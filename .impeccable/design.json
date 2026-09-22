@@ -1,0 +1,329 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-09-22T11:11:27Z",
+  "title": "Design System: Kaptus for iOS",
+  "extensions": {
+    "colorMeta": {
+      "brand-yellow": {
+        "role": "primary",
+        "displayName": "Wordbird yellow",
+        "canonical": "#FFC857",
+        "tonalRamp": [
+          "oklch(15.000% 0.14231 82.662)",
+          "oklch(26.429% 0.14231 82.662)",
+          "oklch(37.857% 0.14231 82.662)",
+          "oklch(49.286% 0.14231 82.662)",
+          "oklch(60.714% 0.14231 82.662)",
+          "oklch(72.143% 0.14231 82.662)",
+          "oklch(83.571% 0.14231 82.662)",
+          "oklch(95.000% 0.14231 82.662)"
+        ]
+      },
+      "link-light": {
+        "role": "primary",
+        "displayName": "Link tint, light appearance",
+        "canonical": "color(srgb 0.063 0.337 0.353)",
+        "tonalRamp": [
+          "oklch(15.000% 0.06497 200.967)",
+          "oklch(26.429% 0.06497 200.967)",
+          "oklch(37.857% 0.06497 200.967)",
+          "oklch(49.286% 0.06497 200.967)",
+          "oklch(60.714% 0.06497 200.967)",
+          "oklch(72.143% 0.06497 200.967)",
+          "oklch(83.571% 0.06497 200.967)",
+          "oklch(95.000% 0.06497 200.967)"
+        ]
+      },
+      "link-dark": {
+        "role": "primary",
+        "displayName": "Link tint, dark appearance",
+        "canonical": "color(srgb 1.000 0.784 0.341)",
+        "tonalRamp": [
+          "oklch(15.000% 0.14231 82.619)",
+          "oklch(26.429% 0.14231 82.619)",
+          "oklch(37.857% 0.14231 82.619)",
+          "oklch(49.286% 0.14231 82.619)",
+          "oklch(60.714% 0.14231 82.619)",
+          "oklch(72.143% 0.14231 82.619)",
+          "oklch(83.571% 0.14231 82.619)",
+          "oklch(95.000% 0.14231 82.619)"
+        ]
+      },
+      "icon-teal": {
+        "role": "secondary",
+        "displayName": "Wordbird icon backdrop",
+        "canonical": "#176B70",
+        "tonalRamp": [
+          "oklch(15.000% 0.07549 201.065)",
+          "oklch(26.429% 0.07549 201.065)",
+          "oklch(37.857% 0.07549 201.065)",
+          "oklch(49.286% 0.07549 201.065)",
+          "oklch(60.714% 0.07549 201.065)",
+          "oklch(72.143% 0.07549 201.065)",
+          "oklch(83.571% 0.07549 201.065)",
+          "oklch(95.000% 0.07549 201.065)"
+        ]
+      },
+      "action-ink": {
+        "role": "neutral",
+        "displayName": "Action ink",
+        "canonical": "#171814",
+        "tonalRamp": [
+          "oklch(15.000% 0.00787 118.502)",
+          "oklch(26.429% 0.00787 118.502)",
+          "oklch(37.857% 0.00787 118.502)",
+          "oklch(49.286% 0.00787 118.502)",
+          "oklch(60.714% 0.00787 118.502)",
+          "oklch(72.143% 0.00787 118.502)",
+          "oklch(83.571% 0.00787 118.502)",
+          "oklch(95.000% 0.00787 118.502)"
+        ]
+      },
+      "cinema-black": {
+        "role": "neutral",
+        "displayName": "Cinema black",
+        "canonical": "#000000",
+        "tonalRamp": [
+          "oklch(15.000% 0.00000 0.000)",
+          "oklch(26.429% 0.00000 0.000)",
+          "oklch(37.857% 0.00000 0.000)",
+          "oklch(49.286% 0.00000 0.000)",
+          "oklch(60.714% 0.00000 0.000)",
+          "oklch(72.143% 0.00000 0.000)",
+          "oklch(83.571% 0.00000 0.000)",
+          "oklch(95.000% 0.00000 0.000)"
+        ]
+      },
+      "caption-white": {
+        "role": "neutral",
+        "displayName": "Caption white",
+        "canonical": "#FFFFFF",
+        "tonalRamp": [
+          "oklch(15.000% 0.00000 0.000)",
+          "oklch(26.429% 0.00000 0.000)",
+          "oklch(37.857% 0.00000 0.000)",
+          "oklch(49.286% 0.00000 0.000)",
+          "oklch(60.714% 0.00000 0.000)",
+          "oklch(72.143% 0.00000 0.000)",
+          "oklch(83.571% 0.00000 0.000)",
+          "oklch(95.000% 0.00000 0.000)"
+        ]
+      },
+      "offset-fill": {
+        "role": "neutral",
+        "displayName": "Offset veil",
+        "canonical": "rgb(255 255 255 / 6%)",
+        "tonalRamp": [
+          "oklch(15.000% 0.00000 0.000 / 0.06)",
+          "oklch(26.429% 0.00000 0.000 / 0.06)",
+          "oklch(37.857% 0.00000 0.000 / 0.06)",
+          "oklch(49.286% 0.00000 0.000 / 0.06)",
+          "oklch(60.714% 0.00000 0.000 / 0.06)",
+          "oklch(72.143% 0.00000 0.000 / 0.06)",
+          "oklch(83.571% 0.00000 0.000 / 0.06)",
+          "oklch(95.000% 0.00000 0.000 / 0.06)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Large title",
+        "purpose": "SwiftUI .largeTitle.bold(), following Dynamic Type. No fixed size token."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "SwiftUI .title.bold() for preparation titles."
+      },
+      "title2": {
+        "displayName": "Title 2",
+        "purpose": "SwiftUI .title2; bold for episode and accessibility Home headings. Also the caption scaling metric."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "SwiftUI .headline for primary actions, row titles, and Play/Pause."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "SwiftUI .body and inherited native form text, following Dynamic Type."
+      },
+      "subheadline": {
+        "displayName": "Subheadline",
+        "purpose": "SwiftUI .subheadline for support text and player secondary actions."
+      },
+      "status": {
+        "displayName": "Player status",
+        "purpose": "SwiftUI .subheadline.weight(.medium), with a textual state description."
+      },
+      "footnote": {
+        "displayName": "Footnote",
+        "purpose": "SwiftUI .footnote for setup, provider, notice, and comfort text."
+      },
+      "caption": {
+        "displayName": "Caption metadata",
+        "purpose": "SwiftUI .caption, with monospaced digits for player time and adjustment."
+      },
+      "reading": {
+        "displayName": "Reading caption",
+        "purpose": "30 pt semibold default baseline; adjustable 24 to 44 pt in 2 pt steps, then scaled with the title2 Dynamic Type metric."
+      }
+    },
+    "shadows": [],
+    "motion": [
+      {
+        "name": "controls-hide-delay",
+        "value": "4s",
+        "purpose": "PlayerSession.swift: visibility delay during eligible playback, not an animation. Cancelled by Re-sync and interaction; blocked during acquisition, reading settings, and VoiceOver. Eligibility is rechecked after the delay."
+      },
+      {
+        "name": "synced-notice-lifetime",
+        "value": "4s",
+        "purpose": "PlayerSession.swift: temporary Synced text after a successful match."
+      },
+      {
+        "name": "search-debounce",
+        "value": "350ms",
+        "purpose": "SearchView.swift: cancellable pause before title search, not an animation."
+      },
+      {
+        "name": "sheet-handoff-delay",
+        "value": "400ms",
+        "purpose": "SearchView.swift: lets the episode sheet dismiss before presenting preparation; native iOS still controls the transition."
+      },
+      {
+        "name": "acquisition-timeout",
+        "value": "35s",
+        "purpose": "PlayerSession.swift and SyncTuning.attemptSeconds: default listening attempt before actionable recovery guidance. This is a behavior limit, not an animation token."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "compact-player",
+        "value": "width > height && !dynamicTypeSize.isAccessibilitySize"
+      },
+      {
+        "name": "accessible-actions",
+        "value": "dynamicTypeSize.isAccessibilitySize"
+      },
+      {
+        "name": "player-action-stack",
+        "value": "ViewThatFits(in: .horizontal): stack when the action row does not fit"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary action",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Source: Brand.swift. Text-only accessibility variant with wrapped centered copy. Minimum native height is 52 pt; HTML maps 1 pt to 1 CSS px for illustration and does not reproduce Dynamic Type or the SwiftUI continuous curve.",
+      "html": "<button type=\"button\" class=\"ds-primary\">Find a movie or TV show</button>",
+      "css": ".ds-primary { font-family: -apple-system, system-ui, sans-serif; font-weight: 600; background: #FFC857; color: #171814; border: 0; border-radius: 18px; padding: 12px 16px; min-height: 52px; width: 100%; white-space: normal; text-align: center; } .ds-primary:hover { cursor: pointer; } .ds-primary:focus-visible { outline: 2px solid Highlight; outline-offset: 2px; } .ds-primary:active { cursor: pointer; }"
+    },
+    {
+      "name": "Secondary action",
+      "kind": "button",
+      "refersTo": "button-secondary-light",
+      "description": "Source: Brand.swift and LinkTint asset. Both primary and secondary actions omit the SF Symbol at accessibility sizes. SwiftUI .bordered owns native shape, fill, and states; browser appearance here is only an illustrative analog.",
+      "html": "<button type=\"button\" class=\"ds-secondary\">Open SRT file</button>",
+      "css": ".ds-secondary { font-family: -apple-system, system-ui, sans-serif; appearance: auto; color: color(srgb 0.063 0.337 0.353); min-height: 44px; width: 100%; white-space: normal; text-align: center; } .ds-secondary:hover { cursor: pointer; } .ds-secondary:focus-visible { outline: 2px solid Highlight; outline-offset: 2px; } .ds-secondary:active { cursor: pointer; } @media (prefers-color-scheme: dark) { .ds-secondary { color-scheme: dark; color: color(srgb 1.000 0.784 0.341); } }"
+    },
+    {
+      "name": "Provider credential field",
+      "kind": "input",
+      "description": "Source: SettingsView.swift. Native SecureField inside Form. Browser-native input and system CSS colors illustrate ownership only; SwiftUI controls actual field geometry and focus. No app-specific field token exists.",
+      "html": "<input class=\"ds-key-field\" type=\"password\" aria-label=\"OpenSubtitles API key\" placeholder=\"OpenSubtitles API key\" autocapitalize=\"none\" spellcheck=\"false\" />",
+      "css": ".ds-key-field { font-family: -apple-system, system-ui, sans-serif; appearance: auto; color-scheme: light dark; background: Canvas; color: CanvasText; min-height: 44px; width: 100%; } .ds-key-field:hover { cursor: text; } .ds-key-field:focus-visible { outline: 2px solid Highlight; outline-offset: 2px; }"
+    },
+    {
+      "name": "Native modal navigation",
+      "kind": "nav",
+      "description": "Source: SettingsView.swift and PlayerView.swift. Inline title and native Cancel/Done toolbar roles. This text-only specimen indicates hierarchy; host iOS owns materials, spacing, typography, back gestures, and presentation.",
+      "html": "<nav class=\"ds-modal-nav\" aria-label=\"Settings\"><button type=\"button\" class=\"ds-nav-action\">Cancel</button><strong>Settings</strong><button type=\"button\" class=\"ds-nav-action\">Done</button></nav>",
+      "css": ".ds-modal-nav { font-family: -apple-system, system-ui, sans-serif; display: flex; align-items: center; justify-content: space-between; color-scheme: light dark; background: Canvas; color: CanvasText; } .ds-nav-action { font: inherit; min-height: 44px; border: 0; background: transparent; color: color(srgb 0.063 0.337 0.353); } .ds-nav-action:hover { cursor: pointer; } .ds-nav-action:focus-visible { outline: 2px solid Highlight; } .ds-nav-action:active { cursor: pointer; } @media (prefers-color-scheme: dark) { .ds-nav-action { color: color(srgb 1.000 0.784 0.341); } }"
+    },
+    {
+      "name": "History row",
+      "kind": "custom",
+      "description": "Source: HomeView.swift. Whole-row button inside a native grouped List, with a 5 pt text gap and 8 pt vertical content padding. SF Symbols and native list geometry are omitted from this illustrative HTML specimen.",
+      "html": "<button type=\"button\" class=\"ds-history-row\"><strong>A little way home</strong><span class=\"ds-history-meta\">Ready offline</span></button>",
+      "css": ".ds-history-row { font-family: -apple-system, system-ui, sans-serif; display: flex; flex-direction: column; gap: 5px; width: 100%; min-height: 44px; padding: 8px 0; text-align: left; border: 0; color-scheme: light dark; background: Canvas; color: CanvasText; } .ds-history-meta { color: GrayText; font-size: smaller; } .ds-history-row:hover { cursor: pointer; } .ds-history-row:focus-visible { outline: 2px solid Highlight; } .ds-history-row:active { cursor: pointer; }"
+    },
+    {
+      "name": "Signed timing offset",
+      "kind": "chip",
+      "refersTo": "player-offset",
+      "description": "Source: PlayerView.swift. Informational capsule, not a button. Shown when adjustment magnitude is at least 0.05 seconds. CSS gray and pill geometry are illustrative equivalents of SwiftUI .gray and Capsule().",
+      "html": "<div class=\"ds-offset-canvas\"><span class=\"ds-offset\" aria-label=\"Caption adjustment plus 0.5 seconds\">+0.5s</span></div>",
+      "css": ".ds-offset-canvas { background: #000000; } .ds-offset { display: inline-block; font-family: -apple-system, system-ui, sans-serif; font-variant-numeric: tabular-nums; color: gray; background: rgb(255 255 255 / 6%); border-radius: 9999px; padding: 6px 10px; }"
+    },
+    {
+      "name": "Cinema caption",
+      "kind": "custom",
+      "refersTo": "player-caption",
+      "description": "Source: PlayerView.swift and PlayerSession.swift. Source-backed 30 pt baseline, white on black, semibold, centered. Illustration maps points to CSS pixels; real native caption sizing scales with Dynamic Type and scrolls when needed. Uses original demo text.",
+      "html": "<div class=\"ds-caption-canvas\"><p class=\"ds-caption-text\">Somewhere, a story is waiting.</p></div>",
+      "css": ".ds-caption-canvas { background: #000000; color: #FFFFFF; padding: 24px; } .ds-caption-text { font-family: -apple-system, system-ui, sans-serif; font-size: 30px; font-weight: 600; text-align: center; max-width: 780px; margin: 0 auto; }"
+    },
+    {
+      "name": "Re-sync action",
+      "kind": "button",
+      "refersTo": "player-resync",
+      "description": "Source: PlayerView.swift and PlayerSession.swift. Plain yellow player action; disabled during acquisition and in the sample. Re-sync cancels pending control hiding. The waveform SF Symbol is omitted because the panel has no SF Symbols runtime.",
+      "html": "<div class=\"ds-resync-canvas\"><button type=\"button\" class=\"ds-resync\">Re-sync</button></div>",
+      "css": ".ds-resync-canvas { background: #000000; } .ds-resync { font-family: -apple-system, system-ui, sans-serif; background: transparent; color: #FFC857; border: 0; min-height: 44px; } .ds-resync:hover:enabled { cursor: pointer; } .ds-resync:focus-visible { outline: 2px solid #FFC857; outline-offset: 2px; } .ds-resync:active:enabled { cursor: pointer; } .ds-resync:disabled { cursor: default; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "Native, quiet, unmistakably Kaptus",
+    "overview": "The yellow Wordbird is the established identity. Native SwiftUI provides the structure: a large-title Home, searchable title results, grouped lists and forms, focused sheets, and a full-screen cinema player. Brand expression lives in the approved artwork, the yellow primary action, and restrained tint.\n\nThe cinema player gives the caption the center of the screen. Its black surface and white text remain stable in both appearances; ordinary app surfaces follow the system. The app targets iPhone on iOS 17 and newer. Navigation bars, sheets, controls, and their materials inherit the host iOS appearance, so a newer OS can change platform chrome without changing this system.",
+    "keyCharacteristics": [
+      "Approved yellow Wordbird artwork, with an opaque square iOS icon export.",
+      "San Francisco, SF Symbols, Dynamic Type, and native Apple navigation.",
+      "Semantic light and dark app surfaces, with a fixed black cinema surface.",
+      "Readable captions, accessible controls, and quiet, temporary player chrome."
+    ],
+    "rules": [
+      {
+        "name": "The Appearance Ownership Rule",
+        "body": "Use semantic foregrounds and system surfaces in the app. Keep black, white, and the selected control colors in the cinema player; do not turn the player into a light surface.",
+        "section": "colors"
+      },
+      {
+        "name": "The Readable Size Rule",
+        "body": "Use native text styles for interface text. Scale the user-selected caption size with the title2 Dynamic Type metric, and allow multiline text to grow vertically.",
+        "section": "typography"
+      },
+      {
+        "name": "The Inherited Depth Rule",
+        "body": "Let the host iOS provide navigation and sheet materials. The app adds no custom card shadows or simulated glass panels.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Platform Chrome Rule",
+        "body": "Use NavigationStack, List, Form, native search, and system presentation controls. Preserve Apple back navigation and Cancel/Done conventions.",
+        "section": "components"
+      },
+      {
+        "name": "The Quiet Cinema Rule",
+        "body": "After synchronization, the caption remains central while transient status and controls recede. Keep controls available during listening, interaction, settings, and VoiceOver use.",
+        "section": "components"
+      }
+    ],
+    "dos": [
+      "Do preserve the approved Wordbird artwork and let iOS apply the app-icon mask.",
+      "Do keep semantic app surfaces and test light and dark appearances.",
+      "Do retain native Dynamic Type, vertical text growth, and text-only primary and secondary actions at accessibility sizes.",
+      "Do provide at least a 44 pt interaction target and explicit accessible names for icon-only actions.",
+      "Do keep the player black, captions white, and timing changes readable without relying on color.",
+      "Do keep microphone recovery actionable and preserve access to manual timeline positioning."
+    ],
+    "donts": [
+      "Don't replace system navigation, sheet materials, or grouped forms with a web-style shell.",
+      "Don't assign hard-coded hex colors to semantic app surfaces or secondary text.",
+      "Don't add the decorative Wordbird to the cinema player.",
+      "Don't flatten Dynamic Type into fixed text sizes or force accessibility layouts into the compact landscape row.",
+      "Don't bake rounded corners or the circular Android badge into the iOS app-icon export.",
+      "Don't treat HTML specimens, synthesized tonal ramps, or earlier simulator captures as native release certification."
+    ]
+  }
+}

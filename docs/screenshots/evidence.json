@@ -1,0 +1,23 @@
+{
+  "source": "https://github.com/desigrit/kaptus-ios/actions/runs/35718030052",
+  "commit": "9bd303fb87f22fb19e7659f1cb58d9f40d00b101",
+  "device": "iPhone 17 Pro, iOS 26.2",
+  "toolchain": "Xcode 26.3, Swift 6.2.4",
+  "captures": "Native simctl captures and XCUIScreen screenshot, original synthetic demo captions. No browser mockups.",
+  "files": [
+    "home-accessibility.png",
+    "home-dark.png",
+    "home-light.png",
+    "player-landscape.png",
+    "player-portrait.png",
+    "settings-light.png"
+  ],
+  "sha256": {
+    "home-accessibility.png": "518b8316bd53f0171cdfc7751b64af9e8b68c215e6a0609b43e96d702fcee6c6",
+    "home-dark.png": "b7fb2fc9aa60fdbf1740c3f457fb78e06ea5c81844b6929f43741467caa98c3f",
+    "home-light.png": "0c6f6183953a934d460426b7de311b430d291d268c17dfe5c40687b43b76ff09",
+    "player-landscape.png": "80bbd76f60b233d17800bda191bb3864aabb5c70e636e18d6c1ea29b49f971fb",
+    "player-portrait.png": "50cf34170a43218f43081d99f94af03bc77e833fad0dfbecb734a11d0d56b49f",
+    "settings-light.png": "b49e230260527aa5ddeaee20fd700ea4e0990beab124595a087a451a4617c9bb"
+  }
+}

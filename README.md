@@ -12,6 +12,20 @@ Choose a title or open an SRT file. Kaptus briefly listens to the dialogue, find
 
 This is the native SwiftUI sibling of [Kaptus for Android](https://github.com/desigrit/kaptus), with the same yellow Wordbird and a distinctly iPhone experience.
 
+## A little look inside
+
+<p align="center">
+  <img src="docs/screenshots/home-light.png" width="230" alt="Kaptus Home in light mode, with the yellow bird and movie or TV search">
+  <img src="docs/screenshots/player-portrait.png" width="230" alt="Large captions on the true-black iPhone player">
+  <img src="docs/screenshots/settings-light.png" width="230" alt="Native iPhone Settings with OpenSubtitles setup and caption size">
+</p>
+
+<p align="center">
+  <img src="docs/screenshots/player-landscape.png" width="720" alt="The caption player in landscape, with the timing adjustment and playback controls">
+</p>
+
+Actual iPhone 17 Pro Simulator captures on iOS 26.2. The player shows original demonstration dialogue, not a recording of a movie. [Capture details](docs/screenshots/README.md).
+
 ## What you can do
 
 - Open an SRT from Files, including iCloud Drive and compatible cloud storage providers.
@@ -40,6 +54,8 @@ Select your Apple development team under **Signing & Capabilities**, choose your
 Start with **Try a sample** to explore the player. Its dialogue is original demonstration text. Then open your own SRT or [set up your OpenSubtitles key](docs/OPENSUBTITLES.md).
 
 [Device testing and troubleshooting](docs/DEVICE_TESTING.md) includes the morning test sequence. [GitHub Actions](https://github.com/desigrit/kaptus-ios/actions/workflows/ios.yml) builds the iPhone target, runs core and simulator tests, and uploads simulator artifacts. A simulator build cannot be installed on a physical iPhone.
+
+The preview passed 35 automated tests on iPhone 17 Pro Simulator with iOS 26.2 and compiled its Release arm64 iPhone build using Xcode 26.3. The [independent review](docs/REVIEW.md) confirmed all three review findings were resolved. [Verification notes](docs/VERIFICATION.md) distinguish those checks from the remaining physical-phone tests.
 
 ## Your OpenSubtitles key
 

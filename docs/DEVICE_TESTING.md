@@ -6,9 +6,7 @@ Use a Mac with full Xcode, not only Command Line Tools. This iOS project cannot 
 
 1. Install Xcode, launch it once, and let it install its iOS platform support.
 2. In Xcode Settings, add your Apple Account. A Personal Team can be used for local development; its provisioning restrictions and expiry apply.
-3. Install Homebrew, then run `brew install cmake xcodegen python`.
-The scripts need Python 3.12 or newer. If `python3 --version` still reports the older Apple-provided version, start a new Terminal after installing Homebrew Python.
-
+3. Install Homebrew, then run `brew install cmake xcodegen python`. The scripts need Python 3.12 or newer. If `python3 --version` still reports the older Apple-provided version, start a new Terminal after installing Homebrew Python.
 4. Clone this repository and run `bash scripts/bootstrap.sh`.
 5. Open `Kaptus.xcodeproj`. Choose the Kaptus app target, open Signing & Capabilities, and select your team. If Xcode reports the bundle identifier is unavailable, change it to a unique identifier for your own development copy.
 6. Connect and trust your iPhone. Enable Developer Mode when iOS asks for it, then select the phone as the run destination.
