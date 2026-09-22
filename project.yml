@@ -1,0 +1,80 @@
+name: Kaptus
+options:
+  bundleIdPrefix: com.desigrit
+  deploymentTarget:
+    iOS: "17.0"
+  xcodeVersion: "16.0"
+  createIntermediateGroups: true
+packages:
+  KaptusCore:
+    path: Packages/KaptusCore
+settings:
+  base:
+    SWIFT_VERSION: "5.9"
+    IPHONEOS_DEPLOYMENT_TARGET: "17.0"
+    MARKETING_VERSION: "0.1.0"
+    CURRENT_PROJECT_VERSION: "1"
+    CODE_SIGN_STYLE: Automatic
+    ENABLE_USER_SCRIPT_SANDBOXING: YES
+targets:
+  Kaptus:
+    type: application
+    platform: iOS
+    sources:
+      - path: Kaptus
+        excludes: ["Resources/Models", "Resources/Info.plist"]
+      - path: Kaptus/Resources/Models
+        type: folder
+        buildPhase: resources
+    info:
+      path: Kaptus/Resources/Info.plist
+      properties:
+        CFBundleDisplayName: Kaptus
+        LSRequiresIPhoneOS: true
+        NSMicrophoneUsageDescription: Kaptus briefly listens to dialogue to find your place in the captions. Audio stays on your iPhone and is never saved or uploaded.
+        UILaunchScreen:
+          UIColorName: LaunchBackground
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
+        UIApplicationSupportsIndirectInputEvents: true
+        ITSAppUsesNonExemptEncryption: false
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.desigrit.kaptus
+        TARGETED_DEVICE_FAMILY: "1"
+        SWIFT_OBJC_BRIDGING_HEADER: Kaptus/Native/Kaptus-Bridging-Header.h
+        HEADER_SEARCH_PATHS: "$(inherited) $(PROJECT_DIR)/Vendor/Headers"
+        CLANG_CXX_LANGUAGE_STANDARD: c++17
+        GCC_OPTIMIZATION_LEVEL: "3"
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        GENERATE_INFOPLIST_FILE: NO
+    dependencies:
+      - package: KaptusCore
+      - framework: Vendor/whisper.xcframework
+        embed: false
+      - sdk: libc++.tbd
+      - sdk: Accelerate.framework
+      - sdk: Metal.framework
+      - sdk: MetalKit.framework
+  KaptusUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources: [KaptusUITests]
+    dependencies:
+      - target: Kaptus
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.desigrit.kaptus.uitests
+        GENERATE_INFOPLIST_FILE: YES
+        TEST_TARGET_NAME: Kaptus
+schemes:
+  Kaptus:
+    build:
+      targets:
+        Kaptus: all
+        KaptusUITests: [test]
+    test:
+      targets: [KaptusUITests]
+      gatherCoverageData: true

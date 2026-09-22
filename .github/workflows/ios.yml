@@ -1,0 +1,57 @@
+name: iOS
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: ios-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  verify:
+    runs-on: macos-15
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - name: Toolchain
+        run: |
+          xcodebuild -version
+          swift --version
+          brew list cmake || brew install cmake
+          brew list xcodegen || brew install xcodegen
+      - name: Test caption and provider logic
+        run: swift test --package-path Packages/KaptusCore
+      - uses: actions/cache@v4
+        with:
+          path: |
+            Vendor
+            .build-cache
+            Kaptus/Resources/Models
+          key: whisper-927cfce-base-en-q5-1-v1-${{ runner.arch }}
+      - name: Prepare bundled recognizer and models
+        run: bash scripts/bootstrap.sh
+      - name: Compile iPhone release
+        run: xcodebuild -project Kaptus.xcodeproj -scheme Kaptus -configuration Release -sdk iphoneos -destination 'generic/platform=iOS' -derivedDataPath DerivedData CODE_SIGNING_ALLOWED=NO build > device-build.log 2>&1 || { tail -120 device-build.log; exit 1; }
+      - name: Run iPhone simulator tests
+        run: |
+          DEVICE=$(xcrun simctl list devices available -j | python3 -c 'import json,sys; d=json.load(sys.stdin); print(next(v["udid"] for k,vs in d["devices"].items() if "iOS" in k for v in vs if "iPhone" in v["name"]))')
+          xcrun simctl boot "$DEVICE" || true
+          xcrun simctl bootstatus "$DEVICE" -b
+          xcodebuild -project Kaptus.xcodeproj -scheme Kaptus -configuration Debug -destination "platform=iOS Simulator,id=$DEVICE" -derivedDataPath DerivedData -resultBundlePath artifacts/UITests.xcresult CODE_SIGNING_ALLOWED=NO test > simulator-test.log 2>&1 || { tail -160 simulator-test.log; exit 1; }
+          python3 scripts/capture_screenshots.py "$DEVICE"
+      - name: Package simulator app and generated project
+        if: always()
+        run: |
+          mkdir -p artifacts
+          ditto -c -k --sequesterRsrc --keepParent Kaptus.xcodeproj artifacts/Kaptus-project.zip || true
+          APP=$(find DerivedData/Build/Products -path '*iphonesimulator/Kaptus.app' -maxdepth 3 | head -1)
+          if [ -n "$APP" ]; then ditto -c -k --sequesterRsrc --keepParent "$APP" artifacts/Kaptus-simulator.zip; fi
+          cp *-build.log *-test.log artifacts/ 2>/dev/null || true
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: kaptus-ios-verification
+          path: artifacts/
+          retention-days: 14
