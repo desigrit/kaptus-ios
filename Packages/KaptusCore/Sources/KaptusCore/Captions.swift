@@ -4,6 +4,7 @@ public enum CaptionParser {
     public static let maximumBytes = 16 * 1024 * 1024
     public static func parse(_ data: Data) throws -> [CaptionCue] {
         guard !data.isEmpty, data.count <= maximumBytes, !data.starts(with: [0x50, 0x4b]) else { throw KaptusError.invalidCaptions }
+        let data = try SubtitlePayload.unpack(data)
         let decoded: String?
         if data.starts(with: [0xff, 0xfe]) || data.starts(with: [0xfe, 0xff]) { decoded = String(data: data, encoding: .utf16) }
         else { decoded = String(data: data, encoding: .utf8) ?? String(data: data, encoding: .windowsCP1252) ?? String(data: data, encoding: .isoLatin1) }

@@ -9,7 +9,7 @@ struct KaptusApp: App {
         WindowGroup {
             RootView().environmentObject(store)
                 .tint(Brand.link)
-                .onChange(of: scenePhase) { _, phase in store.player?.foregroundChanged(phase == .active) }
+                .onChange(of: scenePhase) { _, phase in store.player?.foregroundChanged(phase == .active, background: phase == .background) }
         }
     }
 }

@@ -18,15 +18,16 @@ public protocol SubtitleRepository: Sendable {
 }
 
 /// Ephemeral networking. Download requests never inherit provider credentials.
-public final class URLSessionTransport: NSObject, HTTPTransport, URLSessionTaskDelegate, @unchecked Sendable {
-    public override init() { super.init() }
-    private lazy var session: URLSession = {
+public final class URLSessionTransport: HTTPTransport, @unchecked Sendable {
+    private let session: URLSession
+    public init() {
         let config = URLSessionConfiguration.ephemeral
         config.timeoutIntervalForRequest = 25
         config.timeoutIntervalForResource = 60
         config.urlCache = nil; config.httpCookieStorage = nil
-        return URLSession(configuration: config, delegate: self, delegateQueue: nil)
-    }()
+        session = URLSession(configuration: config, delegate: CredentialRedirectPolicy(), delegateQueue: nil)
+    }
+    deinit { session.invalidateAndCancel() }
     public func send(_ request: URLRequest, maximumBytes: Int) async throws -> HTTPResponse {
         let (bytes, response) = try await session.bytes(for: request)
         guard let http = response as? HTTPURLResponse else { throw KaptusError.malformedResponse }
@@ -38,7 +39,9 @@ public final class URLSessionTransport: NSObject, HTTPTransport, URLSessionTaskD
         }
         return HTTPResponse(data: data, status: http.statusCode)
     }
-    public func urlSession(_ session: URLSession, task: URLSessionTask, willPerformHTTPRedirection response: HTTPURLResponse, newRequest request: URLRequest, completionHandler: @escaping (URLRequest?) -> Void) {
+}
+private final class CredentialRedirectPolicy: NSObject, URLSessionTaskDelegate {
+    func urlSession(_ session: URLSession, task: URLSessionTask, willPerformHTTPRedirection response: HTTPURLResponse, newRequest request: URLRequest, completionHandler: @escaping (URLRequest?) -> Void) {
         guard request.url?.scheme == "https" else { completionHandler(nil); return }
         if task.originalRequest?.value(forHTTPHeaderField: "Api-Key") != nil,
            request.url?.host != task.originalRequest?.url?.host { completionHandler(nil); return }

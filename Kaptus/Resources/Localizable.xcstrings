@@ -1,0 +1,996 @@
+{
+  "sourceLanguage": "en",
+  "strings": {
+    "Your saved provider details couldn't be read. Open Settings to add them again.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your saved provider details couldn't be read. Open Settings to add them again."
+          }
+        }
+      }
+    },
+    "Your caption history couldn't be opened. Your files have not been removed.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your caption history couldn't be opened. Your files have not been removed."
+          }
+        }
+      }
+    },
+    "These captions couldn't be removed. Please try again.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "These captions couldn't be removed. Please try again."
+          }
+        }
+      }
+    },
+    "A little way home": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A little way home"
+          }
+        }
+      }
+    },
+    "Something needs attention": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Something needs attention"
+          }
+        }
+      }
+    },
+    "OK": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "OK"
+          }
+        }
+      }
+    },
+    "Listening stopped. Tap Re-sync to try again.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Listening stopped. Tap Re-sync to try again."
+          }
+        }
+      }
+    },
+    "Microphone access is off. You can still use the timeline, or allow access in iPhone Settings.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Microphone access is off. You can still use the timeline, or allow access in iPhone Settings."
+          }
+        }
+      }
+    },
+    "No clear match yet. Wait for dialogue, then tap Re-sync. You can also try another caption track.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No clear match yet. Wait for dialogue, then tap Re-sync. You can also try another caption track."
+          }
+        }
+      }
+    },
+    "Couldn't start listening. Check that another app isn't using the microphone, then try Re-sync.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Couldn't start listening. Check that another app isn't using the microphone, then try Re-sync."
+          }
+        }
+      }
+    },
+    "The speech models are missing from this build. Rebuild using the setup instructions.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The speech models are missing from this build. Rebuild using the setup instructions."
+          }
+        }
+      }
+    },
+    "Show or hide player controls": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Show or hide player controls"
+          }
+        }
+      }
+    },
+    "Close caption player": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Close caption player"
+          }
+        }
+      }
+    },
+    "Player settings": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Player settings"
+          }
+        }
+      }
+    },
+    "Getting ready to listen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Getting ready to listen"
+          }
+        }
+      }
+    },
+    "Listening": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Listening"
+          }
+        }
+      }
+    },
+    "Transcribing dialogue": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Transcribing dialogue"
+          }
+        }
+      }
+    },
+    "Finding your place": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Finding your place"
+          }
+        }
+      }
+    },
+    "Synced": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Synced"
+          }
+        }
+      }
+    },
+    "Listening paused. Tap Re-sync when you're ready.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Listening paused. Tap Re-sync when you're ready."
+          }
+        }
+      }
+    },
+    "Caption timeline": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Caption timeline"
+          }
+        }
+      }
+    },
+    "Open iPhone Settings": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open iPhone Settings"
+          }
+        }
+      }
+    },
+    "-0.5s": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "-0.5s"
+          }
+        }
+      }
+    },
+    "Show captions half a second later": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Show captions half a second later"
+          }
+        }
+      }
+    },
+    "+0.5s": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "+0.5s"
+          }
+        }
+      }
+    },
+    "Show captions half a second earlier": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Show captions half a second earlier"
+          }
+        }
+      }
+    },
+    "Re-sync": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Re-sync"
+          }
+        }
+      }
+    },
+    "Caption text": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Caption text"
+          }
+        }
+      }
+    },
+    "Somewhere, a story is waiting.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Somewhere, a story is waiting."
+          }
+        }
+      }
+    },
+    "Theater comfort": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Theater comfort"
+          }
+        }
+      }
+    },
+    "Screen brightness": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Screen brightness"
+          }
+        }
+      }
+    },
+    "Very dim": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Very dim"
+          }
+        }
+      }
+    },
+    "Positive adjustments show captions earlier. Negative adjustments show them later.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Positive adjustments show captions earlier. Negative adjustments show them later."
+          }
+        }
+      }
+    },
+    "Re-sync listens again. Moving the timeline keeps you in control and does not turn on the microphone.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Re-sync listens again. Moving the timeline keeps you in control and does not turn on the microphone."
+          }
+        }
+      }
+    },
+    "Done": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Done"
+          }
+        }
+      }
+    },
+    "Follow every line.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Follow every line."
+          }
+        }
+      }
+    },
+    "Find your story. We'll find your place.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Find your story. We'll find your place."
+          }
+        }
+      }
+    },
+    "Open SRT file": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open SRT file"
+          }
+        }
+      }
+    },
+    "Opening captions…": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Opening captions…"
+          }
+        }
+      }
+    },
+    "Set up OpenSubtitles for online search": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Set up OpenSubtitles for online search"
+          }
+        }
+      }
+    },
+    "History": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "History"
+          }
+        }
+      }
+    },
+    "Your next story starts here.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your next story starts here."
+          }
+        }
+      }
+    },
+    "Captions you open or download will be saved here for another night.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Captions you open or download will be saved here for another night."
+          }
+        }
+      }
+    },
+    "Try a sample": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Try a sample"
+          }
+        }
+      }
+    },
+    "Delete": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Delete"
+          }
+        }
+      }
+    },
+    "Made for quiet screens and big stories.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Made for quiet screens and big stories."
+          }
+        }
+      }
+    },
+    "Kaptus": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kaptus"
+          }
+        }
+      }
+    },
+    "Settings": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Settings"
+          }
+        }
+      }
+    },
+    "Bring your own key": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bring your own key"
+          }
+        }
+      }
+    },
+    "Set up OpenSubtitles": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Set up OpenSubtitles"
+          }
+        }
+      }
+    },
+    "Try again": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Try again"
+          }
+        }
+      }
+    },
+    "Looking for your story…": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Looking for your story…"
+          }
+        }
+      }
+    },
+    "What are you watching?": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "What are you watching?"
+          }
+        }
+      }
+    },
+    "No titles found": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No titles found"
+          }
+        }
+      }
+    },
+    "Titles and subtitles from OpenSubtitles.com": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Titles and subtitles from OpenSubtitles.com"
+          }
+        }
+      }
+    },
+    "Prepared for theater. Find it in History.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Prepared for theater. Find it in History."
+          }
+        }
+      }
+    },
+    "Find your story": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Find your story"
+          }
+        }
+      }
+    },
+    "Use the season and episode numbers from your streaming service.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Use the season and episode numbers from your streaming service."
+          }
+        }
+      }
+    },
+    "Find captions": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Find captions"
+          }
+        }
+      }
+    },
+    "Choose an episode": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choose an episode"
+          }
+        }
+      }
+    },
+    "Cancel": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cancel"
+          }
+        }
+      }
+    },
+    "Finding English captions…": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Finding English captions…"
+          }
+        }
+      }
+    },
+    "No complete English captions were found. Try opening an SRT file instead.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No complete English captions were found. Try opening an SRT file instead."
+          }
+        }
+      }
+    },
+    "We pick complete captions first, favoring SDH and trusted, human-authored tracks.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "We pick complete captions first, favoring SDH and trusted, human-authored tracks."
+          }
+        }
+      }
+    },
+    "Saving captions…": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Saving captions…"
+          }
+        }
+      }
+    },
+    "Uses up to 1 download from your provider allowance.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Uses up to 1 download from your provider allowance."
+          }
+        }
+      }
+    },
+    "Prepare for theater": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Prepare for theater"
+          }
+        }
+      }
+    },
+    "Open saved captions": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open saved captions"
+          }
+        }
+      }
+    },
+    "Your captions": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your captions"
+          }
+        }
+      }
+    },
+    "This build is missing its speech models. See the build setup guide before preparing for offline use.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This build is missing its speech models. See the build setup guide before preparing for offline use."
+          }
+        }
+      }
+    },
+    "Notices are unavailable in this build.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Notices are unavailable in this build."
+          }
+        }
+      }
+    },
+    "Notices could not be opened.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Notices could not be opened."
+          }
+        }
+      }
+    },
+    "Make yourself comfortable.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Make yourself comfortable."
+          }
+        }
+      }
+    },
+    "A few details, then back to the story.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A few details, then back to the story."
+          }
+        }
+      }
+    },
+    "OpenSubtitles API key": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "OpenSubtitles API key"
+          }
+        }
+      }
+    },
+    "How to get your free API key": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "How to get your free API key"
+          }
+        }
+      }
+    },
+    "OpenSubtitles": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "OpenSubtitles"
+          }
+        }
+      }
+    },
+    "Use your own API key. Your details stay in this iPhone's Keychain. Provider limits and terms apply.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Use your own API key. Your details stay in this iPhone's Keychain. Provider limits and terms apply."
+          }
+        }
+      }
+    },
+    "Username": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Username"
+          }
+        }
+      }
+    },
+    "Password": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Password"
+          }
+        }
+      }
+    },
+    "Account login, optional": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Account login, optional"
+          }
+        }
+      }
+    },
+    "Some keys require an account login for downloads. Leave both fields empty if your key allows anonymous downloads.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Some keys require an account login for downloads. Leave both fields empty if your key allows anonymous downloads."
+          }
+        }
+      }
+    },
+    "A new story is waiting.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A new story is waiting."
+          }
+        }
+      }
+    },
+    "Caption size preview": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Caption size preview"
+          }
+        }
+      }
+    },
+    "Reading": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reading"
+          }
+        }
+      }
+    },
+    "Text also follows your iPhone's accessibility text size.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Text also follows your iPhone's accessibility text size."
+          }
+        }
+      }
+    },
+    "Microphone stops after a match": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Microphone stops after a match"
+          }
+        }
+      }
+    },
+    "Audio is never saved or uploaded": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Audio is never saved or uploaded"
+          }
+        }
+      }
+    },
+    "Listening and privacy": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Listening and privacy"
+          }
+        }
+      }
+    },
+    "Notices": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Notices"
+          }
+        }
+      }
+    },
+    "Remove saved provider details": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Remove saved provider details"
+          }
+        }
+      }
+    },
+    "Tap Done to save this change. Your downloaded captions are kept.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tap Done to save this change. Your downloaded captions are kept."
+          }
+        }
+      }
+    },
+    "Enter both a username and password, or leave both empty.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Enter both a username and password, or leave both empty."
+          }
+        }
+      }
+    },
+    "Your details couldn't be saved securely. Please try again.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your details couldn't be saved securely. Please try again."
+          }
+        }
+      }
+    },
+    "Your own captions, wherever the story takes you.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your own captions, wherever the story takes you."
+          }
+        }
+      }
+    },
+    "Choose a movie, TV episode, or SRT file.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choose a movie, TV episode, or SRT file."
+          }
+        }
+      }
+    },
+    "Listen briefly to find your place.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Listen briefly to find your place."
+          }
+        }
+      }
+    },
+    "Read along. Your audio stays on your iPhone.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Read along. Your audio stays on your iPhone."
+          }
+        }
+      }
+    },
+    "Local files work without an account. Online search uses your own OpenSubtitles API key.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Local files work without an account. Online search uses your own OpenSubtitles API key."
+          }
+        }
+      }
+    }
+  },
+  "version": "1.0"
+}

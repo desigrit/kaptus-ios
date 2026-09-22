@@ -182,9 +182,13 @@ struct PreparationView: View {
         do {
             let provider = store.provider
             var saved = store.history.first { $0.movie.id == movie.id }
+            var validIDs = Set<Int>()
+            if let existing = saved, let opened = try? await store.library.open(existing) {
+                validIDs = Set(opened.map { $0.0.metadata.fileID })
+            }
             for track in tracks.prefix(count) {
                 try Task.checkCancellation()
-                if saved?.tracks.contains(where: { $0.metadata.fileID == track.fileID }) != true {
+                if !validIDs.contains(track.fileID) {
                     let data = try await provider.download(track)
                     saved = try await store.library.save(data: data, movie: movie, track: track)
                     lastSaved = saved

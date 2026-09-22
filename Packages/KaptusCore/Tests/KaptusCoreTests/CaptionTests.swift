@@ -21,6 +21,11 @@ final class CaptionTests: XCTestCase {
             XCTAssertThrowsError(try CaptionParser.parse(data))
         }
     }
+    func testGzipPayloadAndTruncatedGzip() throws {
+        let data = try XCTUnwrap(Data(base64Encoded: "H4sIAAAAAAACCjPkMjCwAiFDHQMDAwVdXTsFqIAxSIDLvygzPTMvMUchOT+3oCi1uDg1RSE5saAkMz9PDwDv3D8EPAAAAA=="))
+        XCTAssertEqual(try CaptionParser.parse(data).first?.text, "Original compressed caption.")
+        XCTAssertThrowsError(try CaptionParser.parse(Data(data.prefix(12))))
+    }
     func testUTF16CaptionFile() throws {
         let text = "1\n00:00:01,000 --> 00:00:03,000\nCafé by the sea."
         let data = try XCTUnwrap(text.data(using: .utf16))

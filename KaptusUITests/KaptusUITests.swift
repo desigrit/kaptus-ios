@@ -21,6 +21,10 @@ final class KaptusUITests: XCTestCase {
         XCUIDevice.shared.orientation = .landscapeLeft
         XCTAssertTrue(app.staticTexts["player.caption"].exists)
         XCTAssertTrue(app.buttons["player.play"].label.contains("Play"))
+        let landscape = XCTAttachment(screenshot: app.screenshot())
+        landscape.name = "player-landscape"
+        landscape.lifetime = .keepAlways
+        add(landscape)
         XCUIDevice.shared.orientation = .portrait
         app.buttons["player.settings"].tap()
         XCTAssertTrue(app.navigationBars["Player settings"].waitForExistence(timeout: 5))

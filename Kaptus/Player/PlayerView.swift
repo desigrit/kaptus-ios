@@ -62,7 +62,7 @@ struct PlayerView: View {
         .onDisappear { restoreDisplay() }
         .onChange(of: scenePhase) { _, phase in
             if phase == .active { activateDisplay() } else { restoreDisplay() }
-            session.foregroundChanged(phase == .active)
+            session.foregroundChanged(phase == .active, background: phase == .background)
         }
         .onChange(of: session.brightness) { _, value in if scenePhase == .active { UIScreen.main.brightness = value } }
         .onReceive(NotificationCenter.default.publisher(for: AVAudioSession.interruptionNotification)) { _ in session.interrupted() }
@@ -122,8 +122,9 @@ struct PlayerView: View {
             HStack(spacing: 12) {
                 Text(timeString(session.position)).font(.caption.monospacedDigit()).foregroundStyle(.gray)
                 Slider(value: Binding(get: { scrubbing ? scrubPosition : session.position }, set: { scrubPosition = $0 }), in: 0...session.duration, onEditingChanged: { editing in
+                    if editing { scrubPosition = session.position; session.beginInteraction() }
                     scrubbing = editing
-                    if !editing { session.seek(to: scrubPosition) } else { session.revealControls() }
+                    if !editing { session.seek(to: scrubPosition); session.endInteraction() }
                 }).accessibilityLabel("Caption timeline").accessibilityIdentifier("player.timeline")
                 Text(timeString(session.duration)).font(.caption.monospacedDigit()).foregroundStyle(.gray)
             }

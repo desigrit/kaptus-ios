@@ -6,8 +6,11 @@ struct SettingsView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var credentials = ProviderCredentials()
     @State private var errorMessage: String?
-    @State private var saved = false
     @AppStorage("captionSize") private var captionSize = 30.0
+    private var notices: String {
+        guard let url = Bundle.main.url(forResource: "ThirdPartyNotices", withExtension: "txt") else { return String(localized: "Notices are unavailable in this build.") }
+        return (try? String(contentsOf: url, encoding: .utf8)) ?? String(localized: "Notices could not be opened.")
+    }
     var body: some View {
         NavigationStack {
             Form {
@@ -50,6 +53,9 @@ struct SettingsView: View {
                 Section {
                     Link("Privacy", destination: URL(string: "https://github.com/desigrit/kaptus-ios/blob/main/PRIVACY.md")!)
                     Link("Help and device setup", destination: URL(string: "https://github.com/desigrit/kaptus-ios/blob/main/docs/DEVICE_TESTING.md")!)
+                    NavigationLink("Open-source notices") {
+                        ScrollView { Text(notices).font(.footnote).textSelection(.enabled).padding() }.navigationTitle("Notices")
+                    }
                     Link("Kaptus on GitHub", destination: URL(string: "https://github.com/desigrit/kaptus-ios")!)
                     LabeledContent("Version", value: "0.1.0 Preview")
                 }

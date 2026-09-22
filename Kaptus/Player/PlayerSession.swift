@@ -35,6 +35,8 @@ final class PlayerSession: ObservableObject, Identifiable {
     private var noticeTask: Task<Void, Never>?
     private var hasStarted = false
     private var isForeground = true
+    private var awaitingPermission = false
+    private var interacting = false
     private var attempt = UUID()
     var duration: Double { max(1, cues.last?.end ?? 1) }
     var isAcquiring: Bool { state.isAcquiring }
@@ -75,8 +77,13 @@ final class PlayerSession: ObservableObject, Identifiable {
             let permission = AVAudioSession.sharedInstance().recordPermission
             let allowed: Bool
             if permission == .undetermined {
+                self.awaitingPermission = true
                 allowed = await withCheckedContinuation { continuation in
                     AVAudioSession.sharedInstance().requestRecordPermission { continuation.resume(returning: $0) }
+                }
+                self.awaitingPermission = false
+                while !self.isForeground && !Task.isCancelled && self.attempt == token {
+                    try? await Task.sleep(for: .milliseconds(50))
                 }
             } else { allowed = permission == .granted }
             guard !Task.isCancelled, self.attempt == token, self.isForeground else { return }
@@ -149,18 +156,20 @@ final class PlayerSession: ObservableObject, Identifiable {
         if controlsVisible && !UIAccessibility.isVoiceOverRunning { controlsVisible = false; hideControlsTask?.cancel() }
         else { revealControls() }
     }
+    func beginInteraction() { interacting = true; hideControlsTask?.cancel(); controlsVisible = true }
+    func endInteraction() { interacting = false; scheduleHideControls() }
     func scheduleHideControls() {
         hideControlsTask?.cancel()
-        guard clock.isPlaying, !state.isAcquiring, !readingSettingsPresented, !UIAccessibility.isVoiceOverRunning else { return }
+        guard clock.isPlaying, !interacting, !state.isAcquiring, !readingSettingsPresented, !UIAccessibility.isVoiceOverRunning else { return }
         hideControlsTask = Task { [weak self] in
             try? await Task.sleep(for: .seconds(4))
             guard !Task.isCancelled, let self, self.clock.isPlaying, !self.readingSettingsPresented else { return }
             self.controlsVisible = false
         }
     }
-    func foregroundChanged(_ foreground: Bool) {
+    func foregroundChanged(_ foreground: Bool, background: Bool = false) {
         isForeground = foreground
-        if !foreground && state.isAcquiring {
+        if !foreground && state.isAcquiring && (!awaitingPermission || background) {
             stopAcquisition(); state = .interrupted
         }
         tick()
