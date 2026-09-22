@@ -13,6 +13,8 @@ jobs:
   verify:
     runs-on: macos-15
     timeout-minutes: 60
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer
     steps:
       - uses: actions/checkout@v4
       - name: Toolchain
@@ -20,8 +22,8 @@ jobs:
           ls -d /Applications/Xcode*.app
           xcodebuild -version
           swift --version
-          brew list cmake || brew install cmake
-          brew list xcodegen || brew install xcodegen
+          brew list --versions cmake || brew install cmake
+          brew list --versions xcodegen || brew install xcodegen
       - name: Test caption and provider logic
         run: swift test --package-path Packages/KaptusCore
       - uses: actions/cache@v4
@@ -30,7 +32,7 @@ jobs:
             Vendor
             .build-cache
             Kaptus/Resources/Models
-          key: whisper-927cfce-base-en-q5-1-v1-${{ runner.arch }}
+          key: whisper-927cfce-base-en-q5-1-v1-xcode26-3-${{ runner.arch }}
       - name: Prepare bundled recognizer and models
         run: |
           bash scripts/bootstrap.sh > native-build.log 2>&1 || { tail -120 native-build.log; exit 1; }
@@ -41,7 +43,7 @@ jobs:
             Vendor
             .build-cache
             Kaptus/Resources/Models
-          key: whisper-927cfce-base-en-q5-1-v1-${{ runner.arch }}
+          key: whisper-927cfce-base-en-q5-1-v1-xcode26-3-${{ runner.arch }}
       - name: Compile iPhone release
         run: xcodebuild -project Kaptus.xcodeproj -scheme Kaptus -configuration Release -sdk iphoneos -destination 'generic/platform=iOS' -derivedDataPath DerivedData CODE_SIGNING_ALLOWED=NO build > device-build.log 2>&1 || { tail -120 device-build.log; exit 1; }
       - name: Verify offline iPhone bundle
@@ -49,7 +51,7 @@ jobs:
       - name: Run iPhone simulator tests
         timeout-minutes: 15
         run: |
-          DEVICE=$(xcrun simctl list devices available -j | python3 -c 'import json,sys; d=json.load(sys.stdin); print(next(v["udid"] for k,vs in d["devices"].items() if "iOS" in k for v in vs if "iPhone" in v["name"]))')
+          DEVICE=$(xcrun simctl list devices available -j | python3 scripts/select_simulator.py)
           echo "KAPTUS_SIMULATOR=$DEVICE" >> "$GITHUB_ENV"
           xcrun simctl boot "$DEVICE" || true
           xcrun simctl bootstatus "$DEVICE" -b
