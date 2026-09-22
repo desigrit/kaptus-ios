@@ -21,7 +21,9 @@ final class PlayerSession: ObservableObject, Identifiable {
     }
     @Published var brightness: Double = 0.15
     @Published private(set) var showSynced = false
-    private let speech = SpeechRecognition()
+    private let speech: any SpeechRecognitionEngine
+    private let permissionProvider: (() async -> Bool)?
+    private let attemptSeconds: Double
     private let tracks: [(StoredTrack, [CaptionCue])]
     private var trackIndex = 0
     private var index: CaptionIndex
@@ -41,12 +43,14 @@ final class PlayerSession: ObservableObject, Identifiable {
     var duration: Double { max(1, cues.last?.end ?? 1) }
     var isAcquiring: Bool { state.isAcquiring }
 
-    init(title: String, tracks: [(StoredTrack, [CaptionCue])], demonstration: Bool = false) {
+    init(title: String, tracks: [(StoredTrack, [CaptionCue])], demonstration: Bool = false, speech: (any SpeechRecognitionEngine)? = nil, permissionProvider: (() async -> Bool)? = nil, attemptSeconds: Double = SyncTuning.attemptSeconds) {
         self.title = title; self.tracks = tracks; self.demonstration = demonstration
+        self.speech = speech ?? SpeechRecognition()
+        self.permissionProvider = permissionProvider; self.attemptSeconds = attemptSeconds
         cues = tracks[0].1; index = SceneMatcher().buildIndex(tracks[0].1)
-        speech.onState = { [weak self] in self?.state = $0 }
-        speech.onSegment = { [weak self] in self?.receive($0) }
-        speech.onFailure = { [weak self] in
+        self.speech.onState = { [weak self] in self?.state = $0 }
+        self.speech.onSegment = { [weak self] in self?.receive($0) }
+        self.speech.onFailure = { [weak self] in
             self?.timeout?.cancel()
             self?.state = .needsAttention(String(localized: "Listening stopped. Tap Re-sync to try again."))
             self?.controlsVisible = true
@@ -58,7 +62,7 @@ final class PlayerSession: ObservableObject, Identifiable {
         timer = Task { [weak self] in
             while !Task.isCancelled {
                 self?.tick()
-                try? await Task.sleep(for: .milliseconds(50))
+                try? await Task.sleep(for: .milliseconds(100))
             }
         }
         if demonstration {
@@ -76,7 +80,9 @@ final class PlayerSession: ObservableObject, Identifiable {
             guard let self else { return }
             let permission = AVAudioSession.sharedInstance().recordPermission
             let allowed: Bool
-            if permission == .undetermined {
+            if let permissionProvider = self.permissionProvider {
+                allowed = await permissionProvider()
+            } else if permission == .undetermined {
                 self.awaitingPermission = true
                 allowed = await withCheckedContinuation { continuation in
                     AVAudioSession.sharedInstance().requestRecordPermission { continuation.resume(returning: $0) }
@@ -96,7 +102,7 @@ final class PlayerSession: ObservableObject, Identifiable {
                 try await self.speech.start()
                 guard !Task.isCancelled, self.attempt == token else { return }
                 self.timeout = Task { [weak self] in
-                    try? await Task.sleep(for: .seconds(SyncTuning.attemptSeconds))
+                    try? await Task.sleep(for: .seconds(self?.attemptSeconds ?? SyncTuning.attemptSeconds))
                     guard !Task.isCancelled, let self, self.attempt == token, self.state.isAcquiring else { return }
                     self.speech.stop()
                     self.state = .needsAttention(String(localized: "No clear match yet. Wait for dialogue, then tap Re-sync. You can also try another caption track."))
@@ -140,6 +146,7 @@ final class PlayerSession: ObservableObject, Identifiable {
         }
     }
     func togglePlayback() {
+        if state.isAcquiring { stopAcquisition(); state = .idle }
         if clock.isPlaying { clock.pause(at: MonotonicTime.now) }
         else { clock.play(at: MonotonicTime.now) }
         tick(); revealControls()
@@ -182,10 +189,14 @@ final class PlayerSession: ObservableObject, Identifiable {
         attempt = UUID(); acquisition?.cancel(); acquisition = nil; timeout?.cancel(); speech.stop()
     }
     private func tick() {
-        position = min(duration, clock.position(at: MonotonicTime.now))
-        if clock.isPlaying && position >= duration { clock.pause(at: MonotonicTime.now); controlsVisible = true }
-        isPlaying = clock.isPlaying; adjustment = clock.adjustment
-        activeCaption = CaptionParser.activeCue(at: position, in: cues)?.text ?? ""
+        let current = min(duration, clock.position(at: MonotonicTime.now))
+        if clock.isPlaying && current >= duration { clock.pause(at: MonotonicTime.now); controlsVisible = true }
+        let caption = CaptionParser.activeCue(at: current, in: cues)?.text ?? ""
+        if activeCaption != caption { activeCaption = caption }
+        // A quiet player need not redraw its whole view twenty times per second.
+        if controlsVisible || !clock.isPlaying || abs(position - current) >= 1 { position = current }
+        if isPlaying != clock.isPlaying { isPlaying = clock.isPlaying }
+        if adjustment != clock.adjustment { adjustment = clock.adjustment }
     }
     func close() {
         stopAcquisition(); speech.stop(releaseModel: true)

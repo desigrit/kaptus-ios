@@ -5,6 +5,7 @@ import KaptusCore
 final class AppStore: ObservableObject {
     @Published var history: [SavedCaptions] = []
     @Published var credentials = ProviderCredentials()
+    @Published private(set) var providerRevision = 0
     @Published var player: PlayerSession?
     @Published var errorMessage: String?
     @Published var isImporting = false
@@ -28,7 +29,7 @@ final class AppStore: ObservableObject {
         catch { errorMessage = String(localized: "Your caption history couldn't be opened. Your files have not been removed.") }
     }
     func finishOnboarding() { onboardingComplete = true; UserDefaults.standard.set(true, forKey: "onboardingComplete") }
-    func saveCredentials(_ value: ProviderCredentials) throws { try KeychainStore.save(value); credentials = value }
+    func saveCredentials(_ value: ProviderCredentials) throws { try KeychainStore.save(value); credentials = value; providerRevision += 1 }
     func importFile(_ url: URL) async {
         isImporting = true; defer { isImporting = false }
         do {

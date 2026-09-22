@@ -61,7 +61,7 @@ struct SearchView: View {
         .navigationTitle("Find your story").navigationBarTitleDisplayMode(.inline)
         .searchable(text: $query, prompt: "Movie or TV show title")
         .autocorrectionDisabled()
-        .task(id: "\(query)|\(retry)|\(store.credentials.apiKey.isEmpty)") { await search() }
+        .task(id: "\(query)|\(retry)|\(store.providerRevision)") { await search() }
         .sheet(item: $episodeShow) { show in
             EpisodePicker(show: show) { episode in
                 episodeShow = nil

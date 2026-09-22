@@ -37,7 +37,9 @@ final class KaptusUITests: XCTestCase {
         let app = XCUIApplication()
         app.launchArguments = ["-ui-testing", "-demo-player"]
         app.launch()
-        XCTAssertTrue(app.buttons["player.play"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.staticTexts["player.caption"].waitForExistence(timeout: 10))
+        if !app.buttons["player.play"].exists { app.staticTexts["player.caption"].tap() }
+        XCTAssertTrue(app.buttons["player.play"].waitForExistence(timeout: 2))
         let gone = NSPredicate(format: "exists == false")
         expectation(for: gone, evaluatedWith: app.buttons["player.play"])
         waitForExpectations(timeout: 7)

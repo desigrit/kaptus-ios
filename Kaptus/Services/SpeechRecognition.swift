@@ -98,7 +98,19 @@ private final class CaptureBuffer: @unchecked Sendable {
 }
 
 @MainActor
-final class SpeechRecognition {
+protocol SpeechRecognitionEngine: AnyObject {
+    var onState: ((SyncState) -> Void)? { get set }
+    var onSegment: ((RecognizedSegment) -> Void)? { get set }
+    var onFailure: (() -> Void)? { get set }
+    func start() async throws
+    func stop(releaseModel: Bool)
+}
+extension SpeechRecognitionEngine {
+    func stop() { stop(releaseModel: false) }
+}
+
+@MainActor
+final class SpeechRecognition: SpeechRecognitionEngine {
     private let worker = WhisperWorker()
     private var engine: AVAudioEngine?
     private var streamContinuation: AsyncStream<AudioWindow>.Continuation?

@@ -28,6 +28,10 @@ static NSError *recognitionError(NSInteger code) {
         params.use_gpu = true;
 #endif
         _context = whisper_init_from_file_with_params(modelPath.UTF8String, params);
+        if (!_context && params.use_gpu) {
+            params.use_gpu = false;
+            _context = whisper_init_from_file_with_params(modelPath.UTF8String, params);
+        }
         whisper_vad_context_params vadParams = whisper_vad_default_context_params();
         vadParams.n_threads = 2;
         vadParams.use_gpu = false;
