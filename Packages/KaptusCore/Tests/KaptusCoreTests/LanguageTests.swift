@@ -2,6 +2,15 @@ import XCTest
 @testable import KaptusCore
 
 final class LanguageTests: XCTestCase {
+    func testOfflineFallbackIncludesLessCommonLanguagesAndSeparateVariants() {
+        let languages = Dictionary(uniqueKeysWithValues: CaptionLanguage.defaults.map { ($0.code, $0.name) })
+        XCTAssertGreaterThanOrEqual(languages.count, 67)
+        XCTAssertEqual(languages["hu"], "Hungarian")
+        XCTAssertEqual(languages["cy"], "Welsh")
+        XCTAssertEqual(languages["pt-br"], "Portuguese (Brazil)")
+        XCTAssertEqual(languages["pt-pt"], "Portuguese (Portugal)")
+        XCTAssertNotNil(languages["zh-cn"]); XCTAssertNotNil(languages["zh-tw"])
+    }
     func testProductionNeverEnablesUnvalidatedOrUnsupportedPairs() {
         for source in ["zh", "ja", "es", "fr", "de", "ko", "hi", "te", "ta", "it", "und"] {
             for helper in [false, true] {

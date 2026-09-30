@@ -88,10 +88,10 @@ final class KaptusUITests: XCTestCase {
         app.launchArguments = ["-ui-testing", "-demo-settings", "-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryAccessibilityXXXL"]
         app.launch()
         XCTAssertTrue(app.navigationBars["Settings"].waitForExistence(timeout: 10))
-        let captions = app.descendants(matching: .any)["languages.captions"].firstMatch
+        let captions = app.descendants(matching: .any).matching(identifier: "languages.captions").firstMatch
         for _ in 0..<6 where !captions.isHittable { app.swipeUp() }
         XCTAssertTrue(captions.exists)
-        let spoken = app.descendants(matching: .any)["languages.spoken"].firstMatch
+        let spoken = app.descendants(matching: .any).matching(identifier: "languages.spoken").firstMatch
         XCTAssertTrue(spoken.exists)
         app.buttons["settings.done"].tap()
     }
