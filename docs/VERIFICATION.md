@@ -4,7 +4,11 @@ This is a development preview for real-device testing. It has been compiled and 
 
 ## Multilingual 0.2.0 changes
 
-The multilingual changes add core, native storage/model-download, lifecycle and SwiftUI tests. They require a new macOS CI run before being treated as toolchain-verified. No new spoken-language pair has physical-device validation, and all nine remain manual in production. The evidence below describes the earlier English-only baseline, not multilingual accuracy. See MULTILINGUAL.md for the activation matrix and required corpus.
+[Successful multilingual run](https://github.com/desigrit/kaptus-ios/actions/runs/36779217955), source commit `01567cd`, completed on September 30, 2026 with Xcode 26.3 and iPhone 17 Pro Simulator on iOS 26.2. All 62 automated tests passed: 40 core tests, 17 native tests and 5 SwiftUI tests. The unsigned arm64 iPhone Release target compiled, the English/VAD model digests passed bundle verification, and the committed generated Xcode project byte-matches the compiled project.
+
+New checks exercise provider-language variants and the 69-language offline catalog, cache migration/isolation and shared-file roles, UTF-8/CJK/Indic normalization, optional model integrity/resume/cancellation, stale recognition sessions, helper timing/cut validation, direct translation ambiguity and unsupported-language microphone gating. Native UI tests exercise manual Arabic captions, rotation and separate language controls at the largest accessibility size. Screenshots were refreshed from this run.
+
+These tests verify software behavior, not multilingual speech accuracy. No new spoken-language pair has physical-device qualification, and all nine remain manual in production. See [the language matrix](MULTILINGUAL.md) for activation requirements. The English-only baseline below is retained as historical evidence.
 
 ## English-only baseline verified on September 22, 2026
 

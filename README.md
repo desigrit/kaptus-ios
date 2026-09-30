@@ -57,7 +57,7 @@ Start with **Try a sample** to explore the player. Its dialogue is original demo
 
 [Device testing and troubleshooting](docs/DEVICE_TESTING.md) includes the morning test sequence. [GitHub Actions](https://github.com/desigrit/kaptus-ios/actions/workflows/ios.yml) builds the iPhone target, runs core and simulator tests, and uploads simulator artifacts. A simulator build cannot be installed on a physical iPhone.
 
-The English-only 0.1.0 preview passed 35 automated tests on iPhone 17 Pro Simulator with iOS 26.2 and compiled its Release arm64 iPhone build using Xcode 26.3. The [independent review](docs/REVIEW.md) confirmed all three review findings were resolved. [Verification notes](docs/VERIFICATION.md) distinguish those checks from the remaining physical-phone tests.
+The multilingual 0.2.0 preview passed 62 automated tests on iPhone 17 Pro Simulator with iOS 26.2 and compiled its unsigned Release arm64 iPhone build using Xcode 26.3. New spoken-language accuracy still needs physical-phone testing. [Verification notes](docs/VERIFICATION.md) record the checks and their limits; the [earlier independent review](docs/REVIEW.md) remains available for the English-only baseline.
 
 ## Your OpenSubtitles key
 
