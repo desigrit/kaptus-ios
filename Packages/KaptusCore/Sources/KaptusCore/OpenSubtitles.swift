@@ -13,7 +13,8 @@ public protocol HTTPTransport: Sendable {
 }
 public protocol SubtitleRepository: Sendable {
     func searchMovies(_ query: String) async throws -> [MovieCandidate]
-    func findTracks(for movie: MovieCandidate) async throws -> [CaptionTrack]
+    func findTracks(for movie: MovieCandidate, language: String) async throws -> [CaptionTrack]
+    func languages() async throws -> [CaptionLanguage]
     func download(_ track: CaptionTrack) async throws -> Data
 }
 
@@ -119,8 +120,8 @@ public actor OpenSubtitlesRepository: SubtitleRepository {
             return MovieCandidate(id: id, title: title, year: integer(attrs["year"]), imdbID: integer(attrs["imdb_id"]), tmdbID: integer(attrs["tmdb_id"]), kind: type == "movie" ? .movie : .tvShow)
         }
     }
-    public func findTracks(for movie: MovieCandidate) async throws -> [CaptionTrack] {
-        var query: [URLQueryItem] = [.init(name: "languages", value: "en"), .init(name: "type", value: movie.kind == .episode ? "episode" : "movie")]
+    public func findTracks(for movie: MovieCandidate, language: String = "en") async throws -> [CaptionTrack] {
+        var query: [URLQueryItem] = [.init(name: "languages", value: language), .init(name: "type", value: movie.kind == .episode ? "episode" : "movie")]
         let ids: [(String, Int?)] = [("imdb_id", movie.imdbID), ("tmdb_id", movie.tmdbID), ("parent_feature_id", movie.parentFeatureID), ("parent_imdb_id", movie.parentImdbID), ("parent_tmdb_id", movie.parentTmdbID), ("season_number", movie.season), ("episode_number", movie.episode)]
         query += ids.compactMap { name, value in value.map { .init(name: name, value: String($0)) } }
         if movie.kind == .movie && movie.imdbID == nil && movie.tmdbID == nil { query.append(.init(name: "query", value: movie.title)) }
@@ -130,7 +131,18 @@ public actor OpenSubtitlesRepository: SubtitleRepository {
             let rating = (attrs["ratings"] as? NSNumber)?.doubleValue ?? Double(attrs["ratings"] as? String ?? "") ?? 0
             return CaptionTrack(fileID: id, name: file["file_name"] as? String ?? "captions.srt", language: attrs["language"] as? String ?? "", sdh: boolean(attrs["hearing_impaired"]), trusted: boolean(attrs["from_trusted"]), foreignPartsOnly: boolean(attrs["foreign_parts_only"]), machineTranslated: boolean(attrs["ai_translated"]) || boolean(attrs["machine_translated"]), rating: rating, downloads: integer(attrs["download_count"]) ?? 0, release: attrs["release"] as? String ?? "")
         }
-        return TrackRanker.ranked(tracks, movie: movie)
+        return TrackRanker.ranked(tracks, movie: movie, language: language)
+    }
+    public func languages() async throws -> [CaptionLanguage] {
+        let values = try rows(await request("infos/languages"))
+        var seen = Set<String>()
+        let result = values.compactMap { row -> CaptionLanguage? in
+            guard let code = row["language_code"] as? String, !code.isEmpty, seen.insert(code).inserted,
+                  let name = row["language_name"] as? String, !name.isEmpty else { return nil }
+            return .init(code: code, name: name)
+        }
+        guard !result.isEmpty else { throw KaptusError.malformedResponse }
+        return result.sorted { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending }
     }
     public func download(_ track: CaptionTrack) async throws -> Data {
         let data = try await request("download", body: ["file_id": track.fileID, "sub_format": "srt"], authenticate: true)

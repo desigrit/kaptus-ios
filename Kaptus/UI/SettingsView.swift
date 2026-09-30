@@ -5,6 +5,7 @@ struct SettingsView: View {
     @EnvironmentObject private var store: AppStore
     @Environment(\.dismiss) private var dismiss
     @State private var credentials = ProviderCredentials()
+    @State private var languages = LanguageProfile()
     @State private var errorMessage: String?
     @AppStorage("captionSize") private var captionSize = 30.0
     private var notices: String {
@@ -40,6 +41,10 @@ struct SettingsView: View {
                 } header: { Text("Account login, optional") } footer: {
                     Text("Some keys require an account login for downloads. Leave both fields empty if your key allows anonymous downloads.")
                 }
+                Section { LanguageSelection(profile: $languages) } header: { Text("Default languages") } footer: {
+                    Text("You can choose different languages for each movie or episode. The spoken language follows the audio, including dubs.")
+                }
+                MultilingualModelSettings(models: store.models)
                 Section {
                     Stepper(value: $captionSize, in: 24...44, step: 2) { Text("Caption size: \(Int(captionSize))") }
                     Text("A new story is waiting.").font(.system(size: UIFontMetrics(forTextStyle: .title2).scaledValue(for: captionSize), weight: .semibold))
@@ -57,7 +62,7 @@ struct SettingsView: View {
                         ScrollView { Text(notices).font(.footnote).textSelection(.enabled).padding() }.navigationTitle("Notices")
                     }
                     Link("Kaptus on GitHub", destination: URL(string: "https://github.com/desigrit/kaptus-ios")!)
-                    LabeledContent("Version", value: "0.1.0 Preview")
+                    LabeledContent("Version", value: "0.2.0 Preview")
                 }
                 if !credentials.apiKey.isEmpty {
                     Section {
@@ -74,12 +79,13 @@ struct SettingsView: View {
                             errorMessage = String(localized: "Enter both a username and password, or leave both empty."); return
                         }
                         credentials.apiKey = credentials.apiKey.trimmingCharacters(in: .whitespacesAndNewlines)
-                        do { try store.saveCredentials(credentials); dismiss() }
+                        do { try store.saveCredentials(credentials); store.saveLanguageDefaults(languages); dismiss() }
                         catch { errorMessage = String(localized: "Your details couldn't be saved securely. Please try again.") }
                     }.accessibilityIdentifier("settings.done")
                 }
             }
-            .onAppear { credentials = store.credentials }
+            .onAppear { credentials = store.credentials; languages = store.defaultLanguages }
+            .task { await store.refreshLanguages() }
             .alert("Couldn't save", isPresented: Binding(get: { errorMessage != nil }, set: { if !$0 { errorMessage = nil } })) {
                 Button("OK", role: .cancel) {}
             } message: { Text(errorMessage ?? "") }

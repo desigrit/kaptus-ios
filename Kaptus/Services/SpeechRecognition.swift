@@ -15,19 +15,23 @@ final class WhisperWorker: @unchecked Sendable {
     private let queue = DispatchQueue(label: "com.desigrit.kaptus.whisper", qos: .userInitiated)
     private let lock = NSLock()
     private var recognizer: KWRecognizer?
+    private var loadedPath: String?
     static var modelsReady: Bool { modelPath != nil && vadPath != nil }
     private static var modelPath: String? { Bundle.main.path(forResource: "ggml-base.en-q5_1", ofType: "bin", inDirectory: "Models") }
     private static var vadPath: String? { Bundle.main.path(forResource: "ggml-silero-v6.2.0", ofType: "bin", inDirectory: "Models") }
-    func prepare() async throws {
+    func prepare(configuration: RecognitionConfiguration = .init()) async throws {
         try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
             queue.async {
                 do {
-                    guard let model = Self.modelPath, let vad = Self.vadPath else { throw RecognitionFailure.modelUnavailable }
-                    self.lock.lock(); let existing = self.recognizer; self.lock.unlock()
+                    guard let model = (configuration.model == .english ? Self.modelPath : configuration.modelPath), let vad = Self.vadPath else { throw RecognitionFailure.modelUnavailable }
+                    self.lock.lock()
+                    if self.loadedPath != model { self.recognizer = nil; self.loadedPath = nil }
+                    let existing = self.recognizer
+                    self.lock.unlock()
                     if let existing { existing.resetCancellation() }
                     else {
                         let loaded = try KWRecognizer(modelPath: model, vadPath: vad)
-                        self.lock.lock(); self.recognizer = loaded; self.lock.unlock()
+                        self.lock.lock(); self.recognizer = loaded; self.loadedPath = model; self.lock.unlock()
                     }
                     continuation.resume()
                 } catch { continuation.resume(throwing: error) }
@@ -40,18 +44,18 @@ final class WhisperWorker: @unchecked Sendable {
     }
     func releaseModel() {
         cancel()
-        queue.async { self.lock.lock(); self.recognizer = nil; self.lock.unlock() }
+        queue.async { self.lock.lock(); self.recognizer = nil; self.loadedPath = nil; self.lock.unlock() }
     }
-    func transcribe(_ window: AudioWindow) async throws -> RecognizedSegment {
+    func transcribe(_ window: AudioWindow, configuration: RecognitionConfiguration = .init(), task: RecognitionTask = .transcription, windowID: UUID = UUID()) async throws -> RecognizedSegment {
         try await withCheckedThrowingContinuation { continuation in
             queue.async {
                 do {
                     self.lock.lock(); let recognizer = self.recognizer; self.lock.unlock()
                     guard let recognizer else { throw RecognitionFailure.modelUnavailable }
                     let data = window.samples.withUnsafeBytes { Data($0) }
-                    let result = try recognizer.transcribe(data)
+                    let result = try recognizer.transcribe(data, language: configuration.sourceLanguage, translate: task == .translation)
                     let words = result.words.map { RecognizedWord(text: $0.text, start: window.start + $0.start, end: window.start + $0.end, confidence: $0.confidence) }
-                    continuation.resume(returning: RecognizedSegment(words: words, captureStart: window.start, captureEnd: window.end, speechDetected: result.speechDetected))
+                    continuation.resume(returning: RecognizedSegment(words: words, captureStart: window.start, captureEnd: window.end, speechDetected: result.speechDetected, sessionID: configuration.sessionID, language: task == .translation ? "en" : configuration.sourceLanguage, task: task, windowID: windowID))
                 } catch { continuation.resume(throwing: error) }
             }
         }
@@ -64,14 +68,16 @@ private final class CaptureBuffer: @unchecked Sendable {
     let format: AVAudioFormat
     let continuation: AsyncStream<AudioWindow>.Continuation
     let hostToContinuous: Double
-    private var samples = [Float](repeating: 0, count: 96_000)
+    private var samples: [Float]
+    private let stride: Int
     private var writeIndex = 0
     private var filled = 0
     private var sinceEmission = 0
-    init(input: AVAudioFormat, continuation: AsyncStream<AudioWindow>.Continuation) throws {
+    init(input: AVAudioFormat, continuation: AsyncStream<AudioWindow>.Continuation, multilingual: Bool = false) throws {
         guard let output = AVAudioFormat(commonFormat: .pcmFormatFloat32, sampleRate: 16000, channels: 1, interleaved: false),
               let converter = AVAudioConverter(from: input, to: output) else { throw RecognitionFailure.captureUnavailable }
         self.converter = converter; self.format = output; self.continuation = continuation
+        samples = [Float](repeating: 0, count: multilingual ? 128_000 : 96_000); stride = multilingual ? 64_000 : 48_000
         hostToContinuous = MonotonicTime.now - MonotonicTime.seconds(hostTime: mach_absolute_time())
     }
     func accept(_ buffer: AVAudioPCMBuffer, time: AVAudioTime) {
@@ -89,11 +95,11 @@ private final class CaptureBuffer: @unchecked Sendable {
         }
         filled = min(samples.count, filled + Int(converted.frameLength))
         sinceEmission += Int(converted.frameLength)
-        guard filled == samples.count, sinceEmission >= 48_000 else { return }
+        guard filled == samples.count, sinceEmission >= stride else { return }
         sinceEmission = 0
         let ordered = Array(samples[writeIndex...]) + Array(samples[..<writeIndex])
         let end = time.isHostTimeValid ? MonotonicTime.seconds(hostTime: time.hostTime) + hostToContinuous + Double(buffer.frameLength) / buffer.format.sampleRate : MonotonicTime.now
-        continuation.yield(AudioWindow(samples: ordered, start: end - 6, end: end))
+        continuation.yield(AudioWindow(samples: ordered, start: end - Double(samples.count) / 16000, end: end))
     }
 }
 
@@ -103,9 +109,11 @@ protocol SpeechRecognitionEngine: AnyObject {
     var onSegment: ((RecognizedSegment) -> Void)? { get set }
     var onFailure: (() -> Void)? { get set }
     func start() async throws
+    func configure(_ configuration: RecognitionConfiguration)
     func stop(releaseModel: Bool)
 }
 extension SpeechRecognitionEngine {
+    func configure(_ configuration: RecognitionConfiguration) {}
     func stop() { stop(releaseModel: false) }
 }
 
@@ -116,6 +124,8 @@ final class SpeechRecognition: SpeechRecognitionEngine {
     private var streamContinuation: AsyncStream<AudioWindow>.Continuation?
     private var task: Task<Void, Never>?
     private var generation = UUID()
+    private var configuration = RecognitionConfiguration()
+    func configure(_ configuration: RecognitionConfiguration) { self.configuration = configuration }
     var onState: ((SyncState) -> Void)?
     var onSegment: ((RecognizedSegment) -> Void)?
     var onFailure: (() -> Void)?
@@ -124,8 +134,9 @@ final class SpeechRecognition: SpeechRecognitionEngine {
     func start() async throws {
         stop()
         let attempt = UUID(); generation = attempt
+        let config = configuration
         onState?(.loading)
-        try await worker.prepare()
+        try await worker.prepare(configuration: config)
         try Task.checkCancellation()
         guard generation == attempt else { return }
         let session = AVAudioSession.sharedInstance()
@@ -139,7 +150,7 @@ final class SpeechRecognition: SpeechRecognitionEngine {
             guard inputFormat.sampleRate > 0, inputFormat.channelCount > 0 else { throw RecognitionFailure.captureUnavailable }
             let (stream, continuation) = AsyncStream<AudioWindow>.makeStream(bufferingPolicy: .bufferingNewest(1))
             streamContinuation = continuation
-            let buffer = try CaptureBuffer(input: inputFormat, continuation: continuation)
+            let buffer = try CaptureBuffer(input: inputFormat, continuation: continuation, multilingual: config.model == .multilingual)
             input.installTap(onBus: 0, bufferSize: 2048, format: inputFormat) { pcm, time in buffer.accept(pcm, time: time) }
             engine.prepare(); try engine.start()
             self.engine = engine
@@ -149,9 +160,14 @@ final class SpeechRecognition: SpeechRecognitionEngine {
                     guard let self, !Task.isCancelled, self.generation == attempt else { break }
                     self.onState?(.transcribing)
                     do {
-                        let segment = try await worker.transcribe(window)
-                        guard !Task.isCancelled, self.generation == attempt else { break }
-                        self.onSegment?(segment)
+                        let windowID = UUID()
+                        // Both tasks share one model context and the same PCM, always serial.
+                        for kind in config.tasks {
+                            guard !Task.isCancelled, self.generation == attempt else { break }
+                            let segment = try await worker.transcribe(window, configuration: config, task: kind, windowID: windowID)
+                            guard !Task.isCancelled, self.generation == attempt else { break }
+                            self.onSegment?(segment)
+                        }
                     } catch {
                         guard !Task.isCancelled, self.generation == attempt else { break }
                         self.stop(); self.onFailure?(); break

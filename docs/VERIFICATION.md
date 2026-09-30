@@ -2,7 +2,11 @@
 
 This is a development preview for real-device testing. It has been compiled and tested with Apple's toolchain on a macOS runner. No physical iPhone or theater test has been performed in this Windows workspace.
 
-## Verified on September 22, 2026
+## Multilingual 0.2.0 changes
+
+The multilingual changes add core, native storage/model-download, lifecycle and SwiftUI tests. They require a new macOS CI run before being treated as toolchain-verified. No new spoken-language pair has physical-device validation, and all nine remain manual in production. The evidence below describes the earlier English-only baseline, not multilingual accuracy. See MULTILINGUAL.md for the activation matrix and required corpus.
+
+## English-only baseline verified on September 22, 2026
 
 [Successful final run](https://github.com/desigrit/kaptus-ios/actions/runs/35718030052), commit `9bd303f`, Xcode 26.3 (17C529), Swift 6.2.4, iPhone 17 Pro Simulator running iOS 26.2. All 35 tests passed.
 

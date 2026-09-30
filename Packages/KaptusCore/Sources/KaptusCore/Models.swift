@@ -57,14 +57,29 @@ public struct SavedCaptions: Codable, Identifiable, Hashable, Sendable {
     public let movie: MovieCandidate
     public var tracks: [StoredTrack]
     public var lastOpened: Date
-    public init(id: UUID = UUID(), movie: MovieCandidate, tracks: [StoredTrack], lastOpened: Date = Date()) {
-        self.id = id; self.movie = movie; self.tracks = tracks; self.lastOpened = lastOpened
+    public var languages: LanguageProfile
+    public init(id: UUID = UUID(), movie: MovieCandidate, tracks: [StoredTrack], lastOpened: Date = Date(), languages: LanguageProfile = .init()) {
+        self.id = id; self.movie = movie; self.tracks = tracks; self.lastOpened = lastOpened; self.languages = languages
+    }
+    private enum CodingKeys: String, CodingKey { case id, movie, tracks, lastOpened, languages }
+    public init(from decoder: Decoder) throws {
+        let c = try decoder.container(keyedBy: CodingKeys.self)
+        id = try c.decode(UUID.self, forKey: .id); movie = try c.decode(MovieCandidate.self, forKey: .movie)
+        tracks = try c.decode([StoredTrack].self, forKey: .tracks); lastOpened = try c.decode(Date.self, forKey: .lastOpened)
+        languages = try c.decodeIfPresent(LanguageProfile.self, forKey: .languages) ?? .init(captionLanguage: tracks.first(where: { $0.role == .display })?.metadata.language ?? "en")
     }
 }
 public struct StoredTrack: Codable, Hashable, Sendable {
     public let metadata: CaptionTrack
     public let filename: String
-    public init(metadata: CaptionTrack, filename: String) { self.metadata = metadata; self.filename = filename }
+    public let role: CaptionTrackRole
+    public let contentHash: String?
+    public init(metadata: CaptionTrack, filename: String, role: CaptionTrackRole = .display, contentHash: String? = nil) { self.metadata = metadata; self.filename = filename; self.role = role; self.contentHash = contentHash }
+    private enum CodingKeys: String, CodingKey { case metadata, filename, role, contentHash }
+    public init(from decoder: Decoder) throws {
+        let c = try decoder.container(keyedBy: CodingKeys.self); metadata = try c.decode(CaptionTrack.self, forKey: .metadata); filename = try c.decode(String.self, forKey: .filename)
+        role = try c.decodeIfPresent(CaptionTrackRole.self, forKey: .role) ?? .display; contentHash = try c.decodeIfPresent(String.self, forKey: .contentHash)
+    }
 }
 public struct RecognizedWord: Sendable, Equatable {
     public let text: String
@@ -80,8 +95,12 @@ public struct RecognizedSegment: Sendable {
     public let captureStart: Double
     public let captureEnd: Double
     public let speechDetected: Bool
-    public init(words: [RecognizedWord], captureStart: Double, captureEnd: Double, speechDetected: Bool = true) {
-        self.words = words; self.captureStart = captureStart; self.captureEnd = captureEnd; self.speechDetected = speechDetected
+    public let sessionID: UUID?
+    public let language: String
+    public let task: RecognitionTask
+    public let windowID: UUID
+    public init(words: [RecognizedWord], captureStart: Double, captureEnd: Double, speechDetected: Bool = true, sessionID: UUID? = nil, language: String = "en", task: RecognitionTask = .transcription, windowID: UUID = UUID()) {
+        self.words = words; self.captureStart = captureStart; self.captureEnd = captureEnd; self.speechDetected = speechDetected; self.sessionID = sessionID; self.language = language; self.task = task; self.windowID = windowID
     }
 }
 public struct SyncAnchor: Sendable {
@@ -102,7 +121,7 @@ public struct MatchResult: Sendable {
     public static let noMatch = Self(confident: false, score: 0, runnerUp: 0, contentMatches: 0, timingDeviation: .infinity, anchor: nil)
 }
 public enum SyncState: Equatable, Sendable {
-    case idle, loading, listening, transcribing, finding, synced, interrupted, needsAttention(String)
+    case idle, manual, loading, listening, transcribing, finding, synced, interrupted, needsAttention(String)
     public var isAcquiring: Bool {
         switch self { case .loading, .listening, .transcribing, .finding: return true; default: return false }
     }

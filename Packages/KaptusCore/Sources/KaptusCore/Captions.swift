@@ -60,18 +60,24 @@ public enum CaptionParser {
 }
 
 public enum CaptionNormalizer {
-    public static func tokens(_ text: String) -> [String] {
+    public static func tokens(_ text: String, language: String = "en") -> [String] {
         var value = text.replacingOccurrences(of: #"<[^>]+>|[{][^}]*[}]|\[[^\]]*\]|\([^)]*\)"#, with: " ", options: .regularExpression)
         value = value.replacingOccurrences(of: #"(?m)^\s*[-\x{2013}\x{2014}]?\s*[A-Z][A-Za-z0-9 .'-]{1,24}:\s*"#, with: " ", options: .regularExpression)
         value = value.replacingOccurrences(of: #"['\x{2018}\x{2019}`\x{00b4}]"#, with: "", options: .regularExpression)
-        value = value.folding(options: [.diacriticInsensitive, .widthInsensitive], locale: Locale(identifier: "en_US_POSIX")).lowercased()
-        return value.components(separatedBy: CharacterSet.alphanumerics.inverted).filter { !$0.isEmpty }
+        // Never strip Indic combining marks. Western accent folding remains useful for ASR.
+        let fold: String.CompareOptions = ["en", "es", "fr", "de", "pt", "pt-br"].contains(language) ? [.diacriticInsensitive, .widthInsensitive] : [.widthInsensitive]
+        value = value.folding(options: fold, locale: Locale(identifier: language)).lowercased()
+        if ["zh", "zh-cn", "zh-tw", "ja"].contains(language) {
+            return value.map(String.init).filter { $0.unicodeScalars.contains(where: { CharacterSet.letters.contains($0) || CharacterSet.decimalDigits.contains($0) }) }
+        }
+        let allowed = CharacterSet.alphanumerics.union(.nonBaseCharacters)
+        return value.components(separatedBy: allowed.inverted).filter { !$0.isEmpty }
     }
 }
 
 public enum TrackRanker {
-    public static func ranked(_ tracks: [CaptionTrack], movie: MovieCandidate) -> [CaptionTrack] {
-        tracks.filter { $0.language == "en" && !$0.foreignPartsOnly }.sorted {
+    public static func ranked(_ tracks: [CaptionTrack], movie: MovieCandidate, language: String = "en") -> [CaptionTrack] {
+        tracks.filter { $0.language == language && !$0.foreignPartsOnly }.sorted {
             let l = priority($0, movie), r = priority($1, movie)
             if l != r { return l.lexicographicallyPrecedes(r) == false }
             return $0.fileID < $1.fileID

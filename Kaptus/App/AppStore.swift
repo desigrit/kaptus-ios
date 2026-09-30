@@ -3,6 +3,15 @@ import KaptusCore
 
 @MainActor
 final class AppStore: ObservableObject {
+    @Published var captionLanguages = CaptionLanguage.defaults
+    @Published var defaultLanguages = LanguageProfile(
+        captionLanguage: UserDefaults.standard.string(forKey: "captionLanguage") ?? "en",
+        spokenLanguage: UserDefaults.standard.string(forKey: "spokenLanguage") ?? "en")
+    @Published var pendingImportURL: URL?
+    @Published var languageCatalogNotice: String?
+    let models = SpeechModelManager()
+    private let catalog = LanguageCatalog()
+    let autoSeekPolicy = AutoSeekPolicy.production
     @Published var history: [SavedCaptions] = []
     @Published var credentials = ProviderCredentials()
     @Published private(set) var providerRevision = 0
@@ -25,15 +34,32 @@ final class AppStore: ObservableObject {
         }
     }
     func load() async {
+        captionLanguages = await catalog.cached()
         do { history = try await library.load() }
         catch { errorMessage = String(localized: "Your caption history couldn't be opened. Your files have not been removed.") }
+        await refreshLanguages()
+    }
+    func refreshLanguages(force: Bool = false) async {
+        guard credentials.isConfigured else { return }
+        do { captionLanguages = try await catalog.refresh(provider: provider, force: force); languageCatalogNotice = nil }
+        catch { languageCatalogNotice = String(localized: "Showing saved language choices. Connect to refresh the full provider catalog.") }
+    }
+    func saveLanguageDefaults(_ profile: LanguageProfile) {
+        defaultLanguages = profile
+        UserDefaults.standard.set(profile.captionLanguage, forKey: "captionLanguage")
+        UserDefaults.standard.set(profile.spokenLanguage, forKey: "spokenLanguage")
+    }
+    func languageName(_ code: String) -> String { captionLanguages.first(where: { $0.code == code })?.name ?? (code == "und" ? String(localized: "Unknown") : code) }
+    func capability(_ item: SavedCaptions) -> AutoSeekCapability {
+        let ready = item.languages.spokenLanguage == "en" ? WhisperWorker.modelsReady : models.isReady
+        return autoSeekPolicy.capability(item.languages, modelReady: ready, hasHelper: item.tracks.contains { $0.role == .matchingHelper })
     }
     func finishOnboarding() { onboardingComplete = true; UserDefaults.standard.set(true, forKey: "onboardingComplete") }
-    func saveCredentials(_ value: ProviderCredentials) throws { try KeychainStore.save(value); credentials = value; providerRevision += 1 }
-    func importFile(_ url: URL) async {
+    func saveCredentials(_ value: ProviderCredentials) throws { try KeychainStore.save(value); credentials = value; providerRevision += 1; Task { await refreshLanguages(force: true) } }
+    func importFile(_ url: URL, languages: LanguageProfile = .init(captionLanguage: "und", spokenLanguage: "und")) async {
         isImporting = true; defer { isImporting = false }
         do {
-            let item = try await library.importFile(url)
+            let item = try await library.importFile(url, languages: languages)
             history = try await library.load()
             finishOnboarding()
             await open(item)
@@ -43,7 +69,8 @@ final class AppStore: ObservableObject {
         do {
             let tracks = try await library.open(item)
             player?.close()
-            player = PlayerSession(title: item.movie.title, tracks: tracks)
+            player = PlayerSession(title: item.movie.title, tracks: tracks, languages: item.languages, capabilityPolicy: autoSeekPolicy, multilingualModelPath: models.path)
+            player?.onValidatedMapping = { [library] mapping in Task { try? await library.saveMapping(mapping) } }
             history = try await library.load()
         } catch { errorMessage = error.localizedDescription }
     }
@@ -52,6 +79,10 @@ final class AppStore: ObservableObject {
         catch { errorMessage = String(localized: "These captions couldn't be removed. Please try again.") }
     }
     func closePlayer() { player?.close(); player = nil }
+    func showManualSample() {
+        let cues = [CaptionCue(id: 1, start: 0, end: 60, text: "هناك حكاية جديدة تنتظرك.")]
+        player = PlayerSession(title: String(localized: "Original multilingual sample"), tracks: [(.init(metadata: .init(fileID: -2, name: "Original sample", language: "ar"), filename: ""), cues)], languages: .init(captionLanguage: "ar", spokenLanguage: "ar"))
+    }
     func showSample() {
         player = PlayerSession(title: String(localized: "A little way home"), tracks: [(StoredTrack(metadata: CaptionTrack(fileID: -1, name: "Original demo captions"), filename: ""), Demo.cues)], demonstration: true)
     }

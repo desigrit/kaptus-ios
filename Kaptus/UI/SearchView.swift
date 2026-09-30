@@ -24,23 +24,16 @@ struct SearchView: View {
                     Button("Open SRT file") { store.importPresented = true }.frame(minHeight: 44).accessibilityIdentifier("search.import")
                 }
             } else if let errorMessage {
-                Section {
-                    Text(errorMessage).foregroundStyle(.secondary)
-                    Button("Try again") { retry += 1 }.frame(minHeight: 44)
-                }
-            } else if loading {
-                ProgressView("Looking for your story…").frame(maxWidth: .infinity).padding()
-            } else if query.trimmingCharacters(in: .whitespacesAndNewlines).count < 2 {
+                Section { Text(errorMessage).foregroundStyle(.secondary); Button("Try again") { retry += 1 }.frame(minHeight: 44) }
+            } else if loading { ProgressView("Looking for your story…").frame(maxWidth: .infinity).padding() }
+            else if query.trimmingCharacters(in: .whitespacesAndNewlines).count < 2 {
                 EmptyState(title: "What are you watching?", message: "Search by title, then check the year. For a TV show, choose the season and episode next.", symbol: "sparkle.magnifyingglass")
-            } else if results.isEmpty {
-                EmptyState(title: "No titles found", message: "Try fewer words or the original title.", symbol: "magnifyingglass")
-            } else {
+            } else if results.isEmpty { EmptyState(title: "No titles found", message: "Try fewer words or the original title.", symbol: "magnifyingglass") }
+            else {
                 Section {
                     ForEach(results) { movie in
-                        Button {
-                            if movie.kind == .tvShow { episodeShow = movie } else { selected = movie }
-                        } label: {
-                            HStack(alignment: .center, spacing: 16) {
+                        Button { if movie.kind == .tvShow { episodeShow = movie } else { selected = movie } } label: {
+                            HStack(spacing: 16) {
                                 Image(systemName: movie.kind == .tvShow ? "tv" : "film").font(.title2).frame(width: 32).foregroundStyle(.secondary)
                                 VStack(alignment: .leading, spacing: 5) {
                                     Text(movie.title).font(.headline).foregroundStyle(.primary)
@@ -57,18 +50,15 @@ struct SearchView: View {
                 } footer: { Text("Titles and subtitles from OpenSubtitles.com") }
             }
             if preparedNotice {
-                Label("Prepared for theater. Find it in History.", systemImage: "checkmark.circle")
-                    .font(.subheadline).foregroundStyle(.secondary)
+                Label("Captions saved. Find them in History.", systemImage: "checkmark.circle").font(.subheadline).foregroundStyle(.secondary)
             }
         }
         .navigationTitle("Find your story").navigationBarTitleDisplayMode(.inline)
-        .searchable(text: $query, prompt: "Movie or TV show title")
-        .autocorrectionDisabled()
+        .searchable(text: $query, prompt: "Movie or TV show title").autocorrectionDisabled()
         .task(id: "\(query)|\(retry)|\(store.providerRevision)") { await search() }
         .sheet(item: $episodeShow) { show in
             EpisodePicker(show: show) { episode in
                 episodeShow = nil
-                // Native sheet dismissal completes before the next sheet is presented.
                 Task { try? await Task.sleep(for: .milliseconds(400)); selected = episode }
             }
         }
@@ -76,9 +66,7 @@ struct SearchView: View {
             if let item = pendingOpen { pendingOpen = nil; Task { await store.open(item) } }
         }) { movie in
             PreparationView(movie: movie) { item, open in
-                preparedNotice = !open
-                pendingOpen = open ? item : nil
-                selected = nil
+                preparedNotice = !open; pendingOpen = open ? item : nil; selected = nil
             }
         }
     }
@@ -89,8 +77,7 @@ struct SearchView: View {
         do {
             try await Task.sleep(for: .milliseconds(350))
             let matches = try await store.provider.searchMovies(query)
-            try Task.checkCancellation()
-            results = matches; loading = false
+            try Task.checkCancellation(); results = matches; loading = false
         } catch is CancellationError { }
         catch { if !Task.isCancelled { errorMessage = error.localizedDescription; loading = false } }
     }
@@ -121,81 +108,103 @@ struct PreparationView: View {
     let onReady: (SavedCaptions, Bool) -> Void
     @EnvironmentObject private var store: AppStore
     @Environment(\.dismiss) private var dismiss
+    @State private var languages = LanguageProfile()
+    @State private var initialized = false
     @State private var tracks: [CaptionTrack] = []
+    @State private var helper: CaptionTrack?
     @State private var loading = true
     @State private var downloading = false
     @State private var savedCount = 0
     @State private var errorMessage: String?
     @State private var lastSaved: SavedCaptions?
     @State private var loadAttempt = 0
+    private var readiness: AutoSeekCapability {
+        store.autoSeekPolicy.capability(languages, modelReady: languages.spokenLanguage == "en" ? WhisperWorker.modelsReady : store.models.isReady, hasHelper: helper != nil)
+    }
     var body: some View {
         NavigationStack {
-            ScrollView {
-                VStack(alignment: .leading, spacing: 24) {
-                    Image(systemName: movie.kind == .episode ? "tv" : "film").font(.largeTitle).foregroundStyle(.secondary).accessibilityHidden(true)
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text(movie.title).font(.title.bold())
-                        if let year = movie.year { Text(String(year)).foregroundStyle(.secondary) }
-                    }
-                    if loading { ProgressView("Finding English captions…") }
-                    else if tracks.isEmpty && errorMessage == nil {
-                        Text("No complete English captions were found. Try opening an SRT file instead.").foregroundStyle(.secondary)
-                    } else if !tracks.isEmpty {
-                        Label(tracks[0].sdh ? "English, with sound descriptions" : "English captions", systemImage: "captions.bubble")
-                        Text("We pick complete captions first, favoring SDH and trusted, human-authored tracks.").font(.subheadline).foregroundStyle(.secondary)
+            Form {
+                Section {
+                    Text(movie.title).font(.title2.bold())
+                    if let year = movie.year { Text(String(year)).foregroundStyle(.secondary) }
+                }
+                Section { LanguageSelection(profile: $languages).disabled(downloading) } footer: {
+                    Text("Choose the captions you want to read and the language you hear, including dubbed audio.")
+                }
+                if let notice = store.languageCatalogNotice {
+                    Section { Text(notice).font(.footnote).foregroundStyle(.secondary); Button("Refresh languages") { Task { await store.refreshLanguages(force: true) } } }
+                }
+                Section {
+                    if loading { ProgressView("Finding captions…") }
+                    else if tracks.isEmpty && errorMessage == nil { Text("No complete captions were found in this language. Choose another language or open an SRT file.").foregroundStyle(.secondary) }
+                    else if !tracks.isEmpty {
+                        Label(store.languageName(languages.captionLanguage), systemImage: "captions.bubble")
+                        if tracks[0].sdh { Text("Includes sound descriptions").font(.subheadline).foregroundStyle(.secondary) }
+                        switch readiness {
+                        case .ready: Label("Auto-seek available after captions are saved", systemImage: "waveform")
+                        case .modelRequired: Text("Captions can be saved. The speech model is needed for auto-seek.").foregroundStyle(.secondary)
+                        case .manual(let reason): Label("Manual timing", systemImage: "slider.horizontal.3"); Text(reason).font(.footnote).foregroundStyle(.secondary)
+                        }
                         if downloading {
                             ProgressView("Saving captions…")
                             Text("\(savedCount) saved").font(.footnote).foregroundStyle(.secondary)
                         } else {
                             PrimaryAction(title: "Watch now", symbol: "play.fill") { Task { await prepare(count: 1, open: true) } }
-                            Text("Uses up to 1 download from your provider allowance.").font(.footnote).foregroundStyle(.secondary)
-                            SecondaryAction(title: "Prepare for theater", symbol: "arrow.down.circle") {
-                                Task { await prepare(count: min(3, tracks.count), open: false) }
-                            }
-                            Text("Saves up to \(min(3, tracks.count)) tracks for offline matching. Each new track uses one provider download. Existing saved tracks are reused.")
+                            Text("Up to \(1 + (helper == nil ? 0 : 1)) provider downloads: display captions and any matching helper.").font(.footnote).foregroundStyle(.secondary)
+                            SecondaryAction(title: "Prepare for theater", symbol: "arrow.down.circle") { Task { await prepare(count: min(3, tracks.count), open: false) } }
+                            Text("Up to \(min(3, tracks.count) + (helper == nil ? 0 : 1)) provider downloads. Saved files are reused. Manual captions work offline; auto-seek also requires a ready model and validated language pair.")
                                 .font(.footnote).foregroundStyle(.secondary)
                         }
                     }
-                    if let errorMessage {
+                }
+                if let errorMessage {
+                    Section {
                         Text(errorMessage).foregroundStyle(.secondary)
-                        if let lastSaved {
-                            Button("Open saved captions") { onReady(lastSaved, true) }.frame(minHeight: 44)
-                        } else if !downloading { Button("Try again") { loadAttempt += 1 }.frame(minHeight: 44) }
+                        if let lastSaved { Button("Open saved captions") { onReady(lastSaved, true) }.frame(minHeight: 44) }
+                        else if !downloading { Button("Try again") { loadAttempt += 1 }.frame(minHeight: 44) }
                     }
-                }.padding(24).frame(maxWidth: 600)
+                }
             }
             .navigationTitle("Your captions").navigationBarTitleDisplayMode(.inline)
             .toolbar { ToolbarItem(placement: .cancellationAction) { Button("Cancel") { dismiss() }.disabled(downloading) } }
             .interactiveDismissDisabled(downloading)
-            .task(id: loadAttempt) {
-                loading = true; errorMessage = nil
-                do { tracks = try await store.provider.findTracks(for: movie); loading = false }
-                catch { if !Task.isCancelled { errorMessage = error.localizedDescription; loading = false } }
+            .task(id: "\(loadAttempt)|\(languages.captionLanguage)|\(languages.spokenLanguage)") {
+                if !initialized { initialized = true; languages = store.history.first(where: { $0.movie.id == movie.id })?.languages ?? store.defaultLanguages }
+                loading = true; errorMessage = nil; tracks = []; helper = nil
+                do {
+                    let found = try await store.provider.findTracks(for: movie, language: languages.captionLanguage)
+                    try Task.checkCancellation(); tracks = found
+                    if languages.spokenLanguage != "en", store.autoSeekPolicy.allows(languages, path: .helper) {
+                        let candidates = try? await store.provider.findTracks(for: movie, language: SpokenLanguage.helperCode(for: languages.spokenLanguage))
+                        try Task.checkCancellation(); helper = candidates?.first
+                    }
+                    loading = false
+                } catch { if !Task.isCancelled { errorMessage = error.localizedDescription; loading = false } }
             }
         }.presentationDetents([.large])
     }
     private func prepare(count: Int, open: Bool) async {
         guard !downloading else { return }
-        guard open || WhisperWorker.modelsReady else {
-            errorMessage = String(localized: "This build is missing its speech models. See the build setup guide before preparing for offline use.")
-            return
-        }
         downloading = true; errorMessage = nil; savedCount = 0
         defer { downloading = false }
         do {
+            store.saveLanguageDefaults(languages)
             let provider = store.provider
-            var saved = store.history.first { $0.movie.id == movie.id }
-            var validIDs = Set<Int>()
+            var saved = store.history.first { $0.movie.id == movie.id && $0.languages == languages }
+            var validKeys = Set<String>()
             if let existing = saved, let opened = try? await store.library.open(existing) {
-                validIDs = Set(opened.map { $0.0.metadata.fileID })
+                validKeys = Set(opened.map { "\($0.0.role.rawValue):\($0.0.metadata.fileID)" })
             }
-            for track in tracks.prefix(count) {
+            var selected = tracks.prefix(count).map { ($0, CaptionTrackRole.display) }
+            if let helper { selected.append((helper, .matchingHelper)) }
+            for (track, role) in selected {
                 try Task.checkCancellation()
-                if !validIDs.contains(track.fileID) {
-                    let data = try await provider.download(track)
-                    saved = try await store.library.save(data: data, movie: movie, track: track)
-                    lastSaved = saved
-                    store.history = try await store.library.load()
+                if !validKeys.contains("\(role.rawValue):\(track.fileID)") {
+                    let data: Data
+                    if let cached = await store.library.cachedData(for: track) { data = cached }
+                    else { data = try await provider.download(track) }
+                    saved = try await store.library.save(data: data, movie: movie, track: track, languages: languages, role: role)
+                    lastSaved = saved; store.history = try await store.library.load()
                 }
                 savedCount += 1
             }

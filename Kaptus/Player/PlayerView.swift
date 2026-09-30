@@ -104,6 +104,7 @@ struct PlayerView: View {
     private var statusText: String? {
         switch session.state {
         case .idle: return nil
+        case .manual: return session.controlsVisible ? String(localized: "Manual timing") : nil
         case .loading: return String(localized: "Getting ready to listen")
         case .listening: return String(localized: "Listening")
         case .transcribing: return String(localized: "Transcribing dialogue")
@@ -159,7 +160,7 @@ struct PlayerView: View {
     private var resyncButton: some View {
         Button { session.resync() } label: {
             Label("Re-sync", systemImage: "waveform").font(.subheadline).frame(minHeight: 44)
-        }.foregroundStyle(Brand.yellow).disabled(session.isAcquiring || session.demonstration).accessibilityIdentifier("player.resync")
+        }.foregroundStyle(Brand.yellow).disabled(session.isAcquiring || session.demonstration || !session.canAutoSeek).accessibilityIdentifier("player.resync")
     }
     private var readingSettings: some View {
         NavigationStack {
@@ -184,6 +185,7 @@ struct PlayerView: View {
                         }
                 }
                 Section {
+                    if case .manual(let reason) = session.capability { Text(reason) }
                     Text("Positive adjustments show captions earlier. Negative adjustments show them later.")
                     Text("Re-sync listens again. Moving the timeline keeps you in control and does not turn on the microphone.")
                 }.font(.footnote).foregroundStyle(.secondary)

@@ -6,7 +6,9 @@ Listening stops after a match, on timeout, when you close the player, or when th
 
 Online search and downloads contact OpenSubtitles and its HTTPS download host. OpenSubtitles receives your search, subtitle requests, API key, and optional account login. The download host does not receive credentials from Kaptus. These services can see connection information such as an IP address. Their privacy policies apply.
 
-Credentials are stored in the device-only Keychain. SRT files and the history index live in private Application Support storage and are excluded from iCloud device backup. Text size and onboarding completion are local preferences. Delete a History item to remove its captions. Remove saved provider details in Settings and tap Done to clear the stored values.
+The optional multilingual model download contacts Hugging Face and its HTTPS delivery hosts after an explicit action in Settings. Those hosts receive the model request and ordinary connection information, but no OpenSubtitles credentials, microphone audio or transcripts. Model size and SHA-256 are verified before use.
+
+Credentials are stored in the device-only Keychain. SRT files and the history index live in private Application Support storage and are excluded from iCloud device backup. Text size, language preferences and onboarding completion are local preferences. The provider language catalog, optional model and validated track timing mappings also remain in private storage excluded from backup. The optional model can be deleted independently in Settings. Delete a History item to remove its captions. Remove saved provider details in Settings and tap Done to clear the stored values.
 
 There are no analytics, advertising SDKs, tracking identifiers, or Kaptus account servers. Documentation links open websites with their own policies.
 
