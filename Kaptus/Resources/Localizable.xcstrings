@@ -990,6 +990,476 @@
           }
         }
       }
+    },
+    "Showing saved language choices. Connect to refresh the full provider catalog.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Showing saved language choices. Connect to refresh the full provider catalog."
+          }
+        }
+      }
+    },
+    "Unknown": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unknown"
+          }
+        }
+      }
+    },
+    "Manual timing": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Manual timing"
+          }
+        }
+      }
+    },
+    "The speech model download failed. Try again when you're online.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The speech model download failed. Try again when you're online."
+          }
+        }
+      }
+    },
+    "The speech model download has an unexpected size.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The speech model download has an unexpected size."
+          }
+        }
+      }
+    },
+    "The speech model could not be verified. Please download it again.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The speech model could not be verified. Please download it again."
+          }
+        }
+      }
+    },
+    "The multilingual speech model is not installed.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The multilingual speech model is not installed."
+          }
+        }
+      }
+    },
+    "Choose your captions.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choose your captions."
+          }
+        }
+      }
+    },
+    "Caption language": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Caption language"
+          }
+        }
+      }
+    },
+    "Spoken language": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Spoken language"
+          }
+        }
+      }
+    },
+    "Tell us the language in this file and the language you hear. Unknown files still work with manual timing.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tell us the language in this file and the language you hear. Unknown files still work with manual timing."
+          }
+        }
+      }
+    },
+    "Open captions": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open captions"
+          }
+        }
+      }
+    },
+    "Caption languages": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Caption languages"
+          }
+        }
+      }
+    },
+    "Cancel download": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cancel download"
+          }
+        }
+      }
+    },
+    "Multilingual model saved offline": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Multilingual model saved offline"
+          }
+        }
+      }
+    },
+    "Delete multilingual model": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Delete multilingual model"
+          }
+        }
+      }
+    },
+    "Download multilingual model (190 MB)": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Download multilingual model (190 MB)"
+          }
+        }
+      }
+    },
+    "Multilingual speech model": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Multilingual speech model"
+          }
+        }
+      }
+    },
+    "Connect OpenSubtitles to search for captions.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Connect OpenSubtitles to search for captions."
+          }
+        }
+      }
+    },
+    "Captions saved. Find them in History.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Captions saved. Find them in History."
+          }
+        }
+      }
+    },
+    "Choose the captions you want to read and the language you hear, including dubbed audio.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choose the captions you want to read and the language you hear, including dubbed audio."
+          }
+        }
+      }
+    },
+    "Refresh languages": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Refresh languages"
+          }
+        }
+      }
+    },
+    "Finding captions…": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Finding captions…"
+          }
+        }
+      }
+    },
+    "No complete captions were found in this language. Choose another language or open an SRT file.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No complete captions were found in this language. Choose another language or open an SRT file."
+          }
+        }
+      }
+    },
+    "Includes sound descriptions": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Includes sound descriptions"
+          }
+        }
+      }
+    },
+    "Auto-seek available after captions are saved": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Auto-seek available after captions are saved"
+          }
+        }
+      }
+    },
+    "Captions can be saved. The speech model is needed for auto-seek.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Captions can be saved. The speech model is needed for auto-seek."
+          }
+        }
+      }
+    },
+    "Default languages": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Default languages"
+          }
+        }
+      }
+    },
+    "You can choose different languages for each movie or episode. The spoken language follows the audio, including dubs.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You can choose different languages for each movie or episode. The spoken language follows the audio, including dubs."
+          }
+        }
+      }
+    },
+    "Auto-seek is available only with English captions. Use the timeline for this language combination.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Auto-seek is available only with English captions. Use the timeline for this language combination."
+          }
+        }
+      }
+    },
+    "Use the timeline to start these captions. Auto-seek is not available for this spoken language.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Use the timeline to start these captions. Auto-seek is not available for this spoken language."
+          }
+        }
+      }
+    },
+    "%lld saved": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld saved"
+          }
+        }
+      }
+    },
+    "%lld% downloaded": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld% downloaded"
+          }
+        }
+      }
+    },
+    "Up to %lld provider downloads: display captions and any matching helper.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Up to %lld provider downloads: display captions and any matching helper."
+          }
+        }
+      }
+    },
+    "Original multilingual sample": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Original multilingual sample"
+          }
+        }
+      }
+    },
+    "Download the multilingual speech model, then tap Re-sync. Your saved captions also work with manual timing.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Download the multilingual speech model, then tap Re-sync. Your saved captions also work with manual timing."
+          }
+        }
+      }
+    },
+    "Tap Re-sync to find your place": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tap Re-sync to find your place"
+          }
+        }
+      }
+    },
+    "Speech model needed": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Speech model needed"
+          }
+        }
+      }
+    },
+    "Offline auto-seek ready": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Offline auto-seek ready"
+          }
+        }
+      }
+    },
+    "Captions saved · Speech model needed": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Captions saved · Speech model needed"
+          }
+        }
+      }
+    },
+    "Captions saved · Manual timing": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Captions saved · Manual timing"
+          }
+        }
+      }
+    },
+    "Manual timing is available for every language. Auto-seek works with English captions and supported spoken languages. Other languages use the timeline.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Manual timing is available for every language. Auto-seek works with English captions and supported spoken languages. Other languages use the timeline."
+          }
+        }
+      }
+    },
+    "One download, shared by nine spoken languages.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "One download, shared by nine spoken languages."
+          }
+        }
+      }
+    },
+    "Download this model to find your place in English captions while listening to Mandarin, Japanese, Spanish, French, German, Korean, Hindi, Telugu or Tamil audio.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Download this model to find your place in English captions while listening to Mandarin, Japanese, Spanish, French, German, Korean, Hindi, Telugu or Tamil audio."
+          }
+        }
+      }
+    },
+    "Download once, then use auto-seek offline. English audio needs no extra download. Interrupted downloads can be resumed.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Download once, then use auto-seek offline. English audio needs no extra download. Interrupted downloads can be resumed."
+          }
+        }
+      }
+    },
+    "Auto-seek is not enabled for this language. Use the timeline for manual timing.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Auto-seek is not enabled for this language. Use the timeline for manual timing."
+          }
+        }
+      }
+    },
+    "Up to %lld provider downloads. Saved files are reused. Manual captions work offline; auto-seek also requires a ready model and supported language pair.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Up to %lld provider downloads. Saved files are reused. Manual captions work offline; auto-seek also requires a ready model and supported language pair."
+          }
+        }
+      }
     }
   },
   "version": "1.0"

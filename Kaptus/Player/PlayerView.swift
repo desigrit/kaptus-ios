@@ -3,6 +3,7 @@ import AVFoundation
 
 struct PlayerView: View {
     @ObservedObject var session: PlayerSession
+    @EnvironmentObject private var store: AppStore
     let onClose: () -> Void
     @Environment(\.scenePhase) private var scenePhase
     @Environment(\.dynamicTypeSize) private var dynamicType
@@ -56,7 +57,8 @@ struct PlayerView: View {
             readingSettings
         }
         .onAppear {
-            activateDisplay()
+            session.foregroundChanged(scenePhase == .active, background: scenePhase == .background)
+            if scenePhase == .active { activateDisplay() }
             session.startInitial()
         }
         .onDisappear { restoreDisplay() }
@@ -104,6 +106,13 @@ struct PlayerView: View {
     private var statusText: String? {
         switch session.state {
         case .idle: return nil
+        case .manual:
+            guard session.controlsVisible else { return nil }
+            switch session.capability {
+            case .ready: return String(localized: "Tap Re-sync to find your place")
+            case .modelRequired: return String(localized: "Speech model needed")
+            case .manual: return String(localized: "Manual timing")
+            }
         case .loading: return String(localized: "Getting ready to listen")
         case .listening: return String(localized: "Listening")
         case .transcribing: return String(localized: "Transcribing dialogue")
@@ -159,7 +168,7 @@ struct PlayerView: View {
     private var resyncButton: some View {
         Button { session.resync() } label: {
             Label("Re-sync", systemImage: "waveform").font(.subheadline).frame(minHeight: 44)
-        }.foregroundStyle(Brand.yellow).disabled(session.isAcquiring || session.demonstration).accessibilityIdentifier("player.resync")
+        }.foregroundStyle(Brand.yellow).disabled(session.isAcquiring || session.demonstration || !session.canAutoSeek).accessibilityIdentifier("player.resync")
     }
     private var readingSettings: some View {
         NavigationStack {
@@ -183,7 +192,12 @@ struct PlayerView: View {
                             if locked { OrientationController.lockCurrent() } else { OrientationController.unlock() }
                         }
                 }
+                if session.usesMultilingualAutoSeek {
+                    MultilingualModelSettings(models: store.models)
+                }
                 Section {
+                    if session.capability == .modelRequired { Text("Download the multilingual speech model, then tap Re-sync. Your saved captions also work with manual timing.") }
+                    if case .manual(let reason) = session.capability { Text(reason) }
                     Text("Positive adjustments show captions earlier. Negative adjustments show them later.")
                     Text("Re-sync listens again. Moving the timeline keeps you in control and does not turn on the microphone.")
                 }.font(.footnote).foregroundStyle(.secondary)
@@ -208,5 +222,5 @@ struct PlayerView: View {
     }
 }
 #Preview("Cinema") {
-    PlayerView(session: PlayerSession(title: "A little way home", tracks: [(.init(metadata: .init(fileID: -1, name: "Demo"), filename: ""), Demo.cues)], demonstration: true), onClose: {})
+    PlayerView(session: PlayerSession(title: "A little way home", tracks: [(.init(metadata: .init(fileID: -1, name: "Demo"), filename: ""), Demo.cues)], demonstration: true), onClose: {}).environmentObject(AppStore(preview: true))
 }

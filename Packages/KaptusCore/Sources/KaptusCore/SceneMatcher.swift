@@ -13,6 +13,7 @@ public struct CaptionIndex: Sendable {
     struct Word: Sendable { let text: String; let time: Double; let cue: Int; let weight: Double }
     let words: [Word]
     let positions: [String: [Int]]
+    let language: String
 }
 public struct SceneMatcher: Sendable {
     public init() {}
@@ -21,8 +22,8 @@ public struct SceneMatcher: Sendable {
         if Self.stopWords.contains(word) { return 0.12 }
         switch frequency { case ...1: return 1; case ...3: return 0.9; case ...12: return 0.75; default: return 0.55 }
     }
-    public func buildIndex(_ cues: [CaptionCue]) -> CaptionIndex {
-        let tokens = cues.map { CaptionNormalizer.tokens($0.text) }
+    public func buildIndex(_ cues: [CaptionCue], language: String = "en") -> CaptionIndex {
+        let tokens = cues.map { CaptionNormalizer.tokens($0.text, language: language) }
         let frequencies = Dictionary(tokens.flatMap { $0 }.map { ($0, 1) }, uniquingKeysWith: +)
         var words: [CaptionIndex.Word] = []
         var positions: [String: [Int]] = [:]
@@ -32,17 +33,17 @@ public struct SceneMatcher: Sendable {
                 words.append(.init(text: token, time: cue.start + (cue.end - cue.start) * (Double(j) + 0.5) / Double(tokens[i].count), cue: i, weight: weight(token, frequency: frequencies[token, default: 0])))
             }
         }
-        return CaptionIndex(words: words, positions: positions)
+        return CaptionIndex(words: words, positions: positions, language: language)
     }
     public func match(_ segment: RecognizedSegment, index: CaptionIndex, expectedTime: Double? = nil) -> MatchResult {
         let query: [(token: String, source: RecognizedWord, weight: Double)] = segment.words.flatMap { word in
-            CaptionNormalizer.tokens(word.text).map { ($0, word, weight($0, frequency: index.positions[$0]?.count ?? 0)) }
+            CaptionNormalizer.tokens(word.text, language: index.language).map { ($0, word, weight($0, frequency: index.positions[$0]?.count ?? 0)) }
         }
         guard query.filter({ !Self.stopWords.contains($0.token) }).count >= SyncTuning.minimumContentWords, !index.words.isEmpty else { return .noMatch }
         var votes: [Int: Double] = [:]
         for (i, word) in query.enumerated() {
             for position in index.positions[word.token, default: []] {
-                if let expectedTime, abs(index.words[position].time - expectedTime) > 120 { continue }
+                // Global candidates must remain represented for ambiguity rejection.
                 votes[position - i, default: 0] += word.weight
             }
         }
@@ -84,8 +85,11 @@ public struct SceneMatcher: Sendable {
             results.append(.init(confident: false, score: score, runnerUp: 0, contentMatches: pairs.filter { !Self.stopWords.contains(query[$0.0].token) }.count, timingDeviation: deviations[deviations.count / 2], anchor: .init(captureTime: segment.captureEnd, movieTime: segment.captureEnd + median, confidence: score)))
         }
         results.sort { $0.score > $1.score }
-        guard let best = results.first, let anchor = best.anchor else { return .noMatch }
-        let runner = results.dropFirst().first { abs(($0.anchor?.movieTime ?? 0) - anchor.movieTime) > 15 }?.score ?? 0
+        guard let best = results.first(where: { result in
+            guard let expectedTime else { return true }
+            return abs((result.anchor?.movieTime ?? .infinity) - expectedTime) <= 120
+        }), let anchor = best.anchor else { return .noMatch }
+        let runner = results.first { abs(($0.anchor?.movieTime ?? 0) - anchor.movieTime) > 15 }?.score ?? 0
         let confident = best.score >= SyncTuning.minimumScore && best.contentMatches >= SyncTuning.minimumContentWords && best.score - runner >= SyncTuning.runnerUpMargin && best.timingDeviation <= SyncTuning.maximumTimingDeviation
         return .init(confident: confident, score: best.score, runnerUp: runner, contentMatches: best.contentMatches, timingDeviation: best.timingDeviation, anchor: anchor)
     }
@@ -113,6 +117,6 @@ public struct TranscriptAccumulator {
         words.removeAll { $0.end <= cutoff || $0.start >= segment.captureStart }
         words.append(contentsOf: segment.words)
         words = Array(words.filter { $0.end > cutoff }.suffix(96))
-        return .init(words: words, captureStart: words.first?.start ?? segment.captureStart, captureEnd: segment.captureEnd, speechDetected: segment.speechDetected)
+        return .init(words: words, captureStart: words.first?.start ?? segment.captureStart, captureEnd: segment.captureEnd, speechDetected: segment.speechDetected, sessionID: segment.sessionID, language: segment.language, task: segment.task, windowID: segment.windowID)
     }
 }

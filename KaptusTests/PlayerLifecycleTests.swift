@@ -7,6 +7,8 @@ private final class TestRecognition: SpeechRecognitionEngine {
     var onState: ((SyncState) -> Void)?
     var onSegment: ((RecognizedSegment) -> Void)?
     var onFailure: (() -> Void)?
+    var configuration: RecognitionConfiguration?
+    func configure(_ configuration: RecognitionConfiguration) { self.configuration = configuration }
     var starts = 0
     var recording = false
     var released = false
@@ -32,7 +34,7 @@ final class PlayerLifecycleTests: XCTestCase {
             let t = start + Double(index) * 6 / Double(tokens.count)
             return RecognizedWord(text: text, start: t, end: t + 6 / Double(tokens.count))
         }
-        speech.onSegment?(.init(words: words, captureStart: start, captureEnd: start + 6))
+        speech.onSegment?(.init(words: words, captureStart: start, captureEnd: start + 6, sessionID: speech.configuration?.sessionID))
         XCTAssertEqual(session.state, .synced)
         XCTAssertFalse(speech.recording)
         XCTAssertEqual(speech.starts, 1)

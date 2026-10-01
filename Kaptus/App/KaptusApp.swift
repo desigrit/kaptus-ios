@@ -25,6 +25,7 @@ struct RootView: View {
             #if DEBUG
             if ProcessInfo.processInfo.arguments.contains("-ui-testing") {
                 store.finishOnboarding()
+                if ProcessInfo.processInfo.arguments.contains("-demo-manual-player") { store.showManualSample() }
                 if ProcessInfo.processInfo.arguments.contains("-demo-player") { store.showSample() }
                 if ProcessInfo.processInfo.arguments.contains("-demo-settings") { store.settingsPresented = true }
             }
@@ -33,9 +34,12 @@ struct RootView: View {
         .sheet(isPresented: $store.settingsPresented) { SettingsView() }
         .fileImporter(isPresented: $store.importPresented, allowedContentTypes: [.subRipText, .plainText, .data]) { result in
             switch result {
-            case .success(let url): Task { await store.importFile(url) }
+            case .success(let url): Task { try? await Task.sleep(for: .milliseconds(400)); store.pendingImportURL = url }
             case .failure(let error): store.errorMessage = error.localizedDescription
             }
+        }
+        .sheet(isPresented: Binding(get: { store.pendingImportURL != nil }, set: { if !$0 { store.pendingImportURL = nil } })) {
+            if let url = store.pendingImportURL { ImportLanguageView(url: url) }
         }
         .fullScreenCover(item: $store.player, onDismiss: { store.closePlayer() }) { player in
             PlayerView(session: player, onClose: store.closePlayer)

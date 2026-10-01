@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		0072A7BD5889ED3A1615C84A /* ServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95CA1F0B546BC954BBF973D2 /* ServiceTests.swift */; };
 		0E2FE7DD4219D4E2FDC49A1C /* dialogue.wav in Resources */ = {isa = PBXBuildFile; fileRef = 9246AAF556687B172D8698C5 /* dialogue.wav */; };
+		170D8B5CD22F8A615BE8AA7C /* LanguageCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7FCF3B4DDDDEFD286A2DCA3 /* LanguageCatalog.swift */; };
 		1E313960BD3FE017F3FDE02D /* KWRecognizer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 4D7E32D1ABAC9556DE6E8E6B /* KWRecognizer.mm */; };
 		1FDD835FFE28A5E00A8EEA4A /* ThirdPartyNotices.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0AA060C8F43C071C95995A42 /* ThirdPartyNotices.txt */; };
 		233D914426F0A46A5909C9DF /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 111A4EE73310341AE9908178 /* Accelerate.framework */; };
@@ -22,11 +23,13 @@
 		547F897221013C27D1D5E86F /* PlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54105D88963401BF66DE53A5 /* PlayerView.swift */; };
 		6CF679C5FC8874F0C6838B46 /* KaptusApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DD6076C0CDB33E3D5246F9B /* KaptusApp.swift */; };
 		71D76D4A3515D581AA246FF5 /* MetalKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8832537901E62E986DEEB91B /* MetalKit.framework */; };
+		721E3C112BF578D3D0813F54 /* SpeechModelManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9698B85FCA3DC40A6CEB1BB /* SpeechModelManager.swift */; };
 		79FA8C1801190E1E8BA4F3AE /* PlayerSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91A1228413738195BCE24C20 /* PlayerSession.swift */; };
 		7AB5CDF3F090872BBD912116 /* SpeechRecognition.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8580618CF8B7CD4757BCBA6 /* SpeechRecognition.swift */; };
 		7C58FF32876AF60353C41E54 /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = FAF5973DF0E361E2BB1912FB /* libc++.tbd */; };
 		83AA37782E68C16EA3C2F72A /* PlayerLifecycleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1FE148FC4E9C847EA331CC /* PlayerLifecycleTests.swift */; };
 		9E886463F4BCF9122F394A93 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3865EB77D47C9EF640B8EF98 /* SettingsView.swift */; };
+		A1F8DDD25AD2985346501247 /* ModelDownloadTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A350DADEF0181F6F9E6BFE93 /* ModelDownloadTests.swift */; };
 		A2317C2187C7038253E02EAE /* OrientationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB924302E3202A69C1A5887F /* OrientationController.swift */; };
 		A81887CF00B7BAC5D83B72C3 /* AppStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6ED5DB3D6A84B9501FA5DFF6 /* AppStore.swift */; };
 		A97A7DC05D6EFA48CD0A1368 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 626E2553B8BCFB8B21403504 /* Assets.xcassets */; };
@@ -34,9 +37,11 @@
 		B5C7C4C0C43EEF9846A6F0F1 /* Brand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AB8A4C16E93F638867CF410 /* Brand.swift */; };
 		B6A106E22FC2FE04EE033670 /* KaptusCore in Frameworks */ = {isa = PBXBuildFile; productRef = 6A066EF9AACFC60744606FED /* KaptusCore */; };
 		C34064A9C5204CA2CE4A3565 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 47AD4D7C7E68AD7A6302B30C /* Localizable.xcstrings */; };
+		C54D617C2B5AB535B0F479E8 /* LanguageSelection.swift in Sources */ = {isa = PBXBuildFile; fileRef = B85A8E25CF2A1D3D04AEB42B /* LanguageSelection.swift */; };
 		CB5C1C2A2007A6595559FF05 /* Metal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BBB6CC267858D6657B4940E /* Metal.framework */; };
 		D3D7AE98A21FE02747F8F15F /* WelcomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C8ADD38CC792C7C585A9EF7 /* WelcomeView.swift */; };
 		D5047DAE214F7EA66C838A18 /* CaptionLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BF62197C0048E9B1BB2AEAE /* CaptionLibrary.swift */; };
+		DFF56C12DDD1F5D29C946A8E /* MultilingualTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43806584D348D03B0B528735 /* MultilingualTests.swift */; };
 		F58EC680CFD7737C713A0C69 /* Models in Resources */ = {isa = PBXBuildFile; fileRef = 0AB9A0DFACEF6F8D212E1A6E /* Models */; };
 		FD24C1CD77D3E641539FC618 /* whisper.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73B0B1E47745CF090AC6F30E /* whisper.xcframework */; };
 /* End PBXBuildFile section */
@@ -70,6 +75,7 @@
 		2DD6076C0CDB33E3D5246F9B /* KaptusApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KaptusApp.swift; sourceTree = "<group>"; };
 		3865EB77D47C9EF640B8EF98 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		3AB8A4C16E93F638867CF410 /* Brand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Brand.swift; sourceTree = "<group>"; };
+		43806584D348D03B0B528735 /* MultilingualTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultilingualTests.swift; sourceTree = "<group>"; };
 		44FA8BF6F49664B888D58B64 /* MonotonicTime.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonotonicTime.swift; sourceTree = "<group>"; };
 		47AD4D7C7E68AD7A6302B30C /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		4D7E32D1ABAC9556DE6E8E6B /* KWRecognizer.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = KWRecognizer.mm; sourceTree = "<group>"; };
@@ -87,12 +93,16 @@
 		9246AAF556687B172D8698C5 /* dialogue.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = dialogue.wav; sourceTree = "<group>"; };
 		94313E969105589A7929F476 /* Kaptus.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Kaptus.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		95CA1F0B546BC954BBF973D2 /* ServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceTests.swift; sourceTree = "<group>"; };
+		A350DADEF0181F6F9E6BFE93 /* ModelDownloadTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelDownloadTests.swift; sourceTree = "<group>"; };
+		A7FCF3B4DDDDEFD286A2DCA3 /* LanguageCatalog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageCatalog.swift; sourceTree = "<group>"; };
 		B0618D3E9314E9C1B0A96955 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		B8580618CF8B7CD4757BCBA6 /* SpeechRecognition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeechRecognition.swift; sourceTree = "<group>"; };
+		B85A8E25CF2A1D3D04AEB42B /* LanguageSelection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageSelection.swift; sourceTree = "<group>"; };
 		C4A84529557F63676472F21B /* KaptusUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KaptusUITests.swift; sourceTree = "<group>"; };
 		C6593AEC770CB7C4CB54E9DA /* KaptusCore */ = {isa = PBXFileReference; lastKnownFileType = folder; name = KaptusCore; path = Packages/KaptusCore; sourceTree = SOURCE_ROOT; };
 		CB924302E3202A69C1A5887F /* OrientationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrientationController.swift; sourceTree = "<group>"; };
 		E12443DA487300A9F21AC5BA /* SearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchView.swift; sourceTree = "<group>"; };
+		F9698B85FCA3DC40A6CEB1BB /* SpeechModelManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeechModelManager.swift; sourceTree = "<group>"; };
 		FAF5973DF0E361E2BB1912FB /* libc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; };
 		FF950C1BA36E205EF40C7431 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -127,6 +137,7 @@
 			children = (
 				3AB8A4C16E93F638867CF410 /* Brand.swift */,
 				B0618D3E9314E9C1B0A96955 /* HomeView.swift */,
+				B85A8E25CF2A1D3D04AEB42B /* LanguageSelection.swift */,
 				E12443DA487300A9F21AC5BA /* SearchView.swift */,
 				3865EB77D47C9EF640B8EF98 /* SettingsView.swift */,
 				6C8ADD38CC792C7C585A9EF7 /* WelcomeView.swift */,
@@ -178,6 +189,8 @@
 		6C4E79FFD85669308F2561A5 /* KaptusTests */ = {
 			isa = PBXGroup;
 			children = (
+				A350DADEF0181F6F9E6BFE93 /* ModelDownloadTests.swift */,
+				43806584D348D03B0B528735 /* MultilingualTests.swift */,
 				0B1FE148FC4E9C847EA331CC /* PlayerLifecycleTests.swift */,
 				1FD632A028D0194030FD5ACB /* RecognitionTests.swift */,
 				95CA1F0B546BC954BBF973D2 /* ServiceTests.swift */,
@@ -230,7 +243,9 @@
 			children = (
 				8BF62197C0048E9B1BB2AEAE /* CaptionLibrary.swift */,
 				2B8806A54FDF5E6CC5271F13 /* KeychainStore.swift */,
+				A7FCF3B4DDDDEFD286A2DCA3 /* LanguageCatalog.swift */,
 				44FA8BF6F49664B888D58B64 /* MonotonicTime.swift */,
+				F9698B85FCA3DC40A6CEB1BB /* SpeechModelManager.swift */,
 				B8580618CF8B7CD4757BCBA6 /* SpeechRecognition.swift */,
 			);
 			path = Services;
@@ -410,12 +425,15 @@
 				1E313960BD3FE017F3FDE02D /* KWRecognizer.mm in Sources */,
 				6CF679C5FC8874F0C6838B46 /* KaptusApp.swift in Sources */,
 				2A88EF88808DA23338955F61 /* KeychainStore.swift in Sources */,
+				170D8B5CD22F8A615BE8AA7C /* LanguageCatalog.swift in Sources */,
+				C54D617C2B5AB535B0F479E8 /* LanguageSelection.swift in Sources */,
 				2BEB59F3CEC0C33763908123 /* MonotonicTime.swift in Sources */,
 				A2317C2187C7038253E02EAE /* OrientationController.swift in Sources */,
 				79FA8C1801190E1E8BA4F3AE /* PlayerSession.swift in Sources */,
 				547F897221013C27D1D5E86F /* PlayerView.swift in Sources */,
 				2F161D196C0FBADE486C864A /* SearchView.swift in Sources */,
 				9E886463F4BCF9122F394A93 /* SettingsView.swift in Sources */,
+				721E3C112BF578D3D0813F54 /* SpeechModelManager.swift in Sources */,
 				7AB5CDF3F090872BBD912116 /* SpeechRecognition.swift in Sources */,
 				D3D7AE98A21FE02747F8F15F /* WelcomeView.swift in Sources */,
 			);
@@ -433,6 +451,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A1F8DDD25AD2985346501247 /* ModelDownloadTests.swift in Sources */,
+				DFF56C12DDD1F5D29C946A8E /* MultilingualTests.swift in Sources */,
 				83AA37782E68C16EA3C2F72A /* PlayerLifecycleTests.swift in Sources */,
 				2D88A050F0789AA69F6DA947 /* RecognitionTests.swift in Sources */,
 				0072A7BD5889ED3A1615C84A /* ServiceTests.swift in Sources */,
@@ -540,7 +560,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 3;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -560,7 +580,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
-				MARKETING_VERSION = 0.1.0;
+				MARKETING_VERSION = 0.2.1;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -624,7 +644,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 3;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -638,7 +658,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
-				MARKETING_VERSION = 0.1.0;
+				MARKETING_VERSION = 0.2.1;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";

@@ -1,6 +1,7 @@
 {
-  "source": "https://github.com/desigrit/kaptus-ios/actions/runs/35718030052",
-  "commit": "9bd303fb87f22fb19e7659f1cb58d9f40d00b101",
+  "source": "https://github.com/desigrit/kaptus-ios/actions/runs/36801226995",
+  "commit": "faeabf9e914fdfb56de09029bae51ef92b52ac7a",
+  "version": "0.2.1 (3)",
   "device": "iPhone 17 Pro, iOS 26.2",
   "toolchain": "Xcode 26.3, Swift 6.2.4",
   "captures": "Native simctl captures and XCUIScreen screenshot, original synthetic demo captions. No browser mockups.",
@@ -15,9 +16,20 @@
   "sha256": {
     "home-accessibility.png": "518b8316bd53f0171cdfc7751b64af9e8b68c215e6a0609b43e96d702fcee6c6",
     "home-dark.png": "b7fb2fc9aa60fdbf1740c3f457fb78e06ea5c81844b6929f43741467caa98c3f",
-    "home-light.png": "0c6f6183953a934d460426b7de311b430d291d268c17dfe5c40687b43b76ff09",
-    "player-landscape.png": "80bbd76f60b233d17800bda191bb3864aabb5c70e636e18d6c1ea29b49f971fb",
-    "player-portrait.png": "50cf34170a43218f43081d99f94af03bc77e833fad0dfbecb734a11d0d56b49f",
-    "settings-light.png": "b49e230260527aa5ddeaee20fd700ea4e0990beab124595a087a451a4617c9bb"
-  }
+    "home-light.png": "20f9283142d672d71067354c333a6876027b911c641b0f9ebf172b032a87f67e",
+    "player-landscape.png": "c1a9d1e524ae0fa0fe4a3f45599eec6586fa52c5b50a26a86e3681c97040c740",
+    "player-portrait.png": "004d745ffc0e91699a8fab97cf2d8557e663a57ae98740705fc437717c450521",
+    "settings-light.png": "cc516459c9d3813b05b8e7cbeb94d1454718e3bc3fd720cdd3100348253e428b"
+  },
+  "landscapeAttachment": {
+    "exportedFileName": "8493A81D-1E3F-40A1-9304-22B72D618D21.png",
+    "suggestedHumanReadableName": "player-landscape_0_69DA4F19-9759-46BA-8D87-0717115F6217.png",
+    "testIdentifier": "KaptusUITests/testHomeSettingsAndSamplePlayer()",
+    "timestamp": 1790818641.79,
+    "pngEXIFOrientation": 8,
+    "note": "Original PNG orientation metadata is preserved; rendered landscape dimensions are 2622 x 1206."
+  },
+  "captured": "2026-09-30",
+  "capturedTimezone": "America/Los_Angeles",
+  "capturedUTC": "2026-10-01"
 }

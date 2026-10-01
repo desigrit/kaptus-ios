@@ -66,4 +66,33 @@ final class KaptusUITests: XCTestCase {
         for _ in 0..<2 where !app.buttons["search.import"].isHittable { app.swipeUp() }
         XCTAssertTrue(app.buttons["search.import"].isHittable)
     }
+    @MainActor
+    func testUnsupportedLanguageHasManualPlayerAndDisabledResync() throws {
+        let app = XCUIApplication()
+        app.launchArguments = ["-ui-testing", "-demo-manual-player"]
+        app.launch()
+        XCTAssertTrue(app.staticTexts["player.caption"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.staticTexts["player.caption"].label.contains("حكاية"))
+        XCTAssertEqual(app.staticTexts["player.status"].label, "Manual timing")
+        XCTAssertFalse(app.buttons["player.resync"].isEnabled)
+        app.buttons["player.play"].tap()
+        app.buttons["player.play"].tap()
+        XCTAssertFalse(app.buttons["player.resync"].isEnabled)
+        XCUIDevice.shared.orientation = .landscapeLeft
+        XCTAssertTrue(app.staticTexts["player.caption"].exists)
+        XCUIDevice.shared.orientation = .portrait
+    }
+    @MainActor
+    func testSettingsOffersSeparateLanguageChoicesAtAccessibilitySize() throws {
+        let app = XCUIApplication()
+        app.launchArguments = ["-ui-testing", "-demo-settings", "-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryAccessibilityXXXL"]
+        app.launch()
+        XCTAssertTrue(app.navigationBars["Settings"].waitForExistence(timeout: 10))
+        let captions = app.descendants(matching: .any).matching(identifier: "languages.captions").firstMatch
+        for _ in 0..<6 where !captions.isHittable { app.swipeUp() }
+        XCTAssertTrue(captions.exists)
+        let spoken = app.descendants(matching: .any).matching(identifier: "languages.spoken").firstMatch
+        XCTAssertTrue(spoken.exists)
+        app.buttons["settings.done"].tap()
+    }
 }

@@ -7,6 +7,14 @@ final class PlayerSession: ObservableObject, Identifiable {
     let id = UUID()
     let title: String
     let demonstration: Bool
+    let languages: LanguageProfile
+    private let capabilityPolicy: AutoSeekPolicy
+    @Published private var multilingualModelPath: String?
+    var onValidatedMapping: ((TrackTimeMapping) -> Void)?
+    private var crossMatcher: CrossLanguageMatcher?
+    var capability: AutoSeekCapability { capabilityPolicy.capability(languages, modelReady: languages.spokenLanguage == "en" ? WhisperWorker.modelsReady : multilingualModelPath != nil, hasHelper: tracks.contains { $0.0.role == .matchingHelper }) }
+    var canAutoSeek: Bool { capability.canListen }
+    var usesMultilingualAutoSeek: Bool { capabilityPolicy.allows(languages, path: .helper) || capabilityPolicy.allows(languages, path: .translated) }
     @Published private(set) var state: SyncState = .idle
     @Published private(set) var position: Double = 0
     @Published private(set) var activeCaption = ""
@@ -44,18 +52,29 @@ final class PlayerSession: ObservableObject, Identifiable {
     var duration: Double { max(1, cues.last?.end ?? 1) }
     var isAcquiring: Bool { state.isAcquiring }
 
-    init(title: String, tracks: [(StoredTrack, [CaptionCue])], demonstration: Bool = false, speech: (any SpeechRecognitionEngine)? = nil, permissionProvider: (() async -> Bool)? = nil, attemptSeconds: Double = SyncTuning.attemptSeconds, controlsHideSeconds: Double = 4) {
-        self.title = title; self.tracks = tracks; self.demonstration = demonstration
+    init(title: String, tracks: [(StoredTrack, [CaptionCue])], demonstration: Bool = false, speech: (any SpeechRecognitionEngine)? = nil, permissionProvider: (() async -> Bool)? = nil, attemptSeconds: Double = SyncTuning.attemptSeconds, controlsHideSeconds: Double = 4, languages: LanguageProfile = .init(), capabilityPolicy: AutoSeekPolicy = .production, multilingualModelPath: String? = nil) {
+        self.title = title; self.tracks = tracks.filter { $0.0.role == .matchingHelper || $0.0.metadata.language == languages.captionLanguage }; self.demonstration = demonstration
+        self.languages = languages; self.capabilityPolicy = capabilityPolicy; self.multilingualModelPath = multilingualModelPath
         self.speech = speech ?? SpeechRecognition()
         self.permissionProvider = permissionProvider; self.attemptSeconds = attemptSeconds; self.controlsHideSeconds = controlsHideSeconds
-        cues = tracks[0].1; index = SceneMatcher().buildIndex(tracks[0].1)
-        self.speech.onState = { [weak self] in self?.state = $0 }
+        let first = self.tracks.firstIndex(where: { $0.0.role == .display }) ?? 0
+        trackIndex = first; cues = self.tracks[first].1; index = SceneMatcher().buildIndex(cues, language: languages.captionLanguage)
+        self.speech.onState = { [weak self] in if let self, self.state.isAcquiring { self.state = $0 } }
         self.speech.onSegment = { [weak self] in self?.receive($0) }
         self.speech.onFailure = { [weak self] in
+            self?.speech.stop()
             self?.timeout?.cancel()
             self?.state = .needsAttention(String(localized: "Listening stopped. Tap Re-sync to try again."))
             self?.controlsVisible = true
         }
+    }
+    func updateMultilingualModelPath(_ path: String?) {
+        guard multilingualModelPath != path else { return }
+        multilingualModelPath = path
+        if path == nil && languages.spokenLanguage != "en" && state.isAcquiring {
+            stopAcquisition(); state = .manual; controlsVisible = true
+        }
+        // Becoming ready only enables explicit Re-sync. It never starts a late initial attempt.
     }
     func startInitial() {
         guard !hasStarted else { return }
@@ -69,14 +88,19 @@ final class PlayerSession: ObservableObject, Identifiable {
         if demonstration {
             clock = PlaybackClock(now: MonotonicTime.now, position: 4, playing: true)
             state = .synced; showSyncNotice(); tick(); scheduleHideControls()
-        } else { resync() }
+        } else if canAutoSeek { resync() } else { state = .manual; tick() }
     }
     func resync() {
         guard isForeground, !demonstration else { return }
+        guard canAutoSeek else { state = .manual; controlsVisible = true; return }
         hideControlsTask?.cancel()
         acquisition?.cancel(); timeout?.cancel(); speech.stop()
         attempt = UUID(); let token = attempt
         accumulator = TranscriptAccumulator(); microphoneDenied = false
+        crossMatcher = CrossLanguageMatcher(profile: languages, policy: capabilityPolicy, tracks: tracks)
+        let hasHelper = tracks.contains { $0.0.role == .matchingHelper }
+        let tasks: [RecognitionTask] = languages.spokenLanguage == "en" ? [.transcription] : (hasHelper && capabilityPolicy.allows(languages, path: .helper) ? [.transcription, .translation] : [.translation])
+        speech.configure(.init(sessionID: token, sourceLanguage: languages.spokenLanguage, model: languages.spokenLanguage == "en" ? .english : .multilingual, tasks: tasks, modelPath: multilingualModelPath))
         state = .loading; controlsVisible = true
         acquisition = Task { [weak self] in
             guard let self else { return }
@@ -100,41 +124,57 @@ final class PlayerSession: ObservableObject, Identifiable {
                 self.state = .needsAttention(String(localized: "Microphone access is off. You can still use the timeline, or allow access in iPhone Settings."))
                 return
             }
+            // Starts after permission setup, before native initialization.
+            self.timeout = Task { [weak self] in
+                try? await Task.sleep(for: .seconds(self?.attemptSeconds ?? SyncTuning.attemptSeconds))
+                guard !Task.isCancelled, let self, self.attempt == token, self.state.isAcquiring else { return }
+                self.stopAcquisition()
+                self.state = .needsAttention(String(localized: "No clear match yet. Tap Re-sync during dialogue, or close the player and open another SRT file from Home."))
+                self.controlsVisible = true
+            }
             do {
                 try await self.speech.start()
-                guard !Task.isCancelled, self.attempt == token else { return }
-                self.timeout = Task { [weak self] in
-                    try? await Task.sleep(for: .seconds(self?.attemptSeconds ?? SyncTuning.attemptSeconds))
-                    guard !Task.isCancelled, let self, self.attempt == token, self.state.isAcquiring else { return }
-                    self.speech.stop()
-                    self.state = .needsAttention(String(localized: "No clear match yet. Tap Re-sync during dialogue, or close the player and open another SRT file from Home."))
-                    self.controlsVisible = true
-                }
+                guard !Task.isCancelled, self.attempt == token, self.isForeground else { self.speech.stop(); return }
             } catch {
                 guard !Task.isCancelled, self.attempt == token else { return }
-                self.speech.stop()
+                self.speech.stop(); self.timeout?.cancel()
                 self.state = .needsAttention(WhisperWorker.modelsReady ? String(localized: "Couldn't start listening. Check that another app isn't using the microphone, then try Re-sync.") : String(localized: "The speech models are missing from this build. Rebuild using the setup instructions."))
             }
         }
     }
     private func receive(_ segment: RecognizedSegment) {
-        guard isForeground, state.isAcquiring else { return }
+        guard isForeground, state.isAcquiring, canAutoSeek else { return }
+        guard segment.sessionID == attempt else { return }
+        if languages.spokenLanguage != "en" {
+            guard segment.sessionID == attempt else { return }
+            state = .finding
+            if let result = crossMatcher?.receive(segment) {
+                accept(track: result.displayTrack, anchor: result.anchor)
+                if let mapping = result.mapping { onValidatedMapping?(mapping) }
+            }
+            return
+        }
+        guard segment.language == "en", segment.task == .transcription else { return }
         guard segment.speechDetected, !segment.words.isEmpty else { state = .listening; return }
         state = .finding
         let transcript = accumulator.append(segment)
         // Prepared alternatives are searched without another transcription or network request.
         let matcher = SceneMatcher()
         var winner: (Int, MatchResult)?
-        for i in tracks.indices {
+        for i in tracks.indices where tracks[i].0.role == .display && tracks[i].0.metadata.language == languages.captionLanguage {
             let candidateIndex = i == trackIndex ? index : matcher.buildIndex(tracks[i].1)
             let match = matcher.match(transcript, index: candidateIndex)
             if match.confident && (winner == nil || match.score > winner!.1.score) { winner = (i, match) }
         }
         guard let winner, let anchor = winner.1.anchor else { return }
+        accept(track: winner.0, anchor: anchor)
+    }
+    private func accept(track: Int, anchor: SyncAnchor) {
         speech.stop()
         timeout?.cancel(); acquisition = nil
-        if winner.0 != trackIndex {
-            trackIndex = winner.0; cues = tracks[trackIndex].1; index = matcher.buildIndex(cues)
+        let matcher = SceneMatcher()
+        if track != trackIndex {
+            trackIndex = track; cues = tracks[trackIndex].1; index = matcher.buildIndex(cues)
         }
         clock.align(to: anchor, now: MonotonicTime.now)
         state = .synced; tick(); showSyncNotice(); scheduleHideControls()
@@ -148,7 +188,7 @@ final class PlayerSession: ObservableObject, Identifiable {
         }
     }
     func togglePlayback() {
-        if state.isAcquiring { stopAcquisition(); state = .idle }
+        if state.isAcquiring { stopAcquisition(); state = canAutoSeek ? .idle : .manual }
         if clock.isPlaying { clock.pause(at: MonotonicTime.now) }
         else { clock.play(at: MonotonicTime.now) }
         tick(); revealControls()

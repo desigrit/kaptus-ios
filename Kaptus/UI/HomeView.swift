@@ -55,7 +55,8 @@ struct HomeView: View {
                                     Image(systemName: item.movie.kind == .movie ? "film" : "tv").font(.title2).foregroundStyle(.secondary).frame(width: 32)
                                     VStack(alignment: .leading, spacing: 5) {
                                         Text(item.movie.title).font(.headline).foregroundStyle(.primary)
-                                        Label(WhisperWorker.modelsReady ? "Ready offline" : "Captions saved", systemImage: WhisperWorker.modelsReady ? "checkmark.circle" : "arrow.down.circle")
+                                        Text(store.languageName(item.languages.captionLanguage)).font(.caption).foregroundStyle(.secondary)
+                                        Label(readinessLabel(item), systemImage: store.capability(item).canListen ? "checkmark.circle" : "slider.horizontal.3")
                                             .font(.caption).foregroundStyle(.secondary)
                                     }
                                     Spacer(minLength: 4)
@@ -80,6 +81,13 @@ struct HomeView: View {
                 }
             }
             .navigationDestination(isPresented: $store.searchRequested) { SearchView() }
+        }
+    }
+    private func readinessLabel(_ item: SavedCaptions) -> String {
+        switch store.capability(item) {
+        case .ready: return String(localized: "Offline auto-seek ready")
+        case .modelRequired: return String(localized: "Captions saved · Speech model needed")
+        case .manual: return String(localized: "Captions saved · Manual timing")
         }
     }
 }

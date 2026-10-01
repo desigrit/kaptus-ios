@@ -4,6 +4,7 @@
 #include <atomic>
 #include <algorithm>
 #include <thread>
+#include <string>
 
 @implementation KWWord
 @end
@@ -53,6 +54,9 @@ static bool shouldAbort(void *context) {
     return static_cast<std::atomic<bool> *>(context)->load();
 }
 - (nullable KWResult *)transcribeSamples:(NSData *)samples error:(NSError **)error {
+    return [self transcribeSamples:samples language:@"en" translate:NO error:error];
+}
+- (nullable KWResult *)transcribeSamples:(NSData *)samples language:(NSString *)language translate:(BOOL)translate error:(NSError **)error {
     const float *pcm = static_cast<const float *>(samples.bytes);
     const int count = static_cast<int>(samples.length / sizeof(float));
     if (_cancelled.load() || count == 0) { if (error) *error = recognitionError(2); return nil; }
@@ -69,11 +73,11 @@ static bool shouldAbort(void *context) {
     if (!speech) return result;
 
     whisper_full_params params = whisper_full_default_params(WHISPER_SAMPLING_GREEDY);
-    params.language = "en";
+    params.language = language.UTF8String;
     params.n_threads = std::min(4u, std::max(2u, std::thread::hardware_concurrency()));
-    params.translate = false;
+    params.translate = translate;
     params.no_context = true;
-    params.token_timestamps = true;
+    params.token_timestamps = !translate;
     params.print_realtime = false;
     params.print_progress = false;
     params.print_timestamps = false;
@@ -89,32 +93,35 @@ static bool shouldAbort(void *context) {
     }
     NSMutableArray<KWWord *> *words = [NSMutableArray array];
     for (int s = 0; s < whisper_full_n_segments(_context); ++s) {
-        KWWord *current = nil;
         const double fallbackStart = whisper_full_get_segment_t0(_context, s) / 100.0;
         const double fallbackEnd = whisper_full_get_segment_t1(_context, s) / 100.0;
+        // BPE tokens can contain partial UTF-8 bytes. Decode only assembled strings.
+        std::string bytes;
+        double start = 0, end = 0, confidence = 1;
+        auto flush = [&]() {
+            if (bytes.empty()) return;
+            NSString *assembled = [[NSString alloc] initWithBytes:bytes.data() length:bytes.size() encoding:NSUTF8StringEncoding];
+            NSString *clean = [assembled stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet];
+            if (clean.length) {
+                KWWord *word = [KWWord new]; word.text = clean; word.start = start; word.end = end; word.confidence = confidence;
+                [words addObject:word];
+            }
+            bytes.clear();
+        };
         for (int t = 0; t < whisper_full_n_tokens(_context, s); ++t) {
             whisper_token_data token = whisper_full_get_token_data(_context, s, t);
             if (token.id >= whisper_token_eot(_context)) continue;
             const char *raw = whisper_token_to_str(_context, token.id);
-            NSString *piece = raw ? [NSString stringWithUTF8String:raw] : nil;
-            if (!piece.length) continue;
-            const BOOL boundary = [[NSCharacterSet whitespaceAndNewlineCharacterSet] characterIsMember:[piece characterAtIndex:0]];
-            NSString *clean = [piece stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet];
-            if (!clean.length) continue;
-            double start = token.t0 >= 0 ? token.t0 / 100.0 : fallbackStart;
-            double end = token.t1 >= token.t0 && token.t1 >= 0 ? token.t1 / 100.0 : fallbackEnd;
-            start = std::clamp(start, 0.0, count / 16000.0);
-            end = std::clamp(end, start, count / 16000.0);
-            if (!current || boundary) {
-                current = [KWWord new]; current.text = clean; current.start = start;
-                current.end = end; current.confidence = token.p;
-                [words addObject:current];
-            } else {
-                current.text = [current.text stringByAppendingString:clean];
-                current.end = std::max(current.end, end);
-                current.confidence = std::min(current.confidence, (double)token.p);
-            }
+            if (!raw || !*raw) continue;
+            if ((*raw == ' ' || *raw == '\n' || *raw == '\t') && !bytes.empty()) flush();
+            const double tokenStart = translate ? fallbackStart : (token.t0 >= 0 ? token.t0 / 100.0 : fallbackStart);
+            const double tokenEnd = translate ? fallbackEnd : (token.t1 >= token.t0 && token.t1 >= 0 ? token.t1 / 100.0 : fallbackEnd);
+            if (bytes.empty()) { start = std::clamp(tokenStart, 0.0, count / 16000.0); confidence = token.p; }
+            end = std::clamp(tokenEnd, start, count / 16000.0);
+            confidence = std::min(confidence, (double)token.p);
+            bytes.append(raw);
         }
+        flush();
     }
     result.words = words;
     return result;

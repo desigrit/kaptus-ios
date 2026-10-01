@@ -13,6 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface KWRecognizer : NSObject
 - (nullable instancetype)initWithModelPath:(NSString *)modelPath vadPath:(NSString *)vadPath error:(NSError **)error;
 - (nullable KWResult *)transcribeSamples:(NSData *)samples error:(NSError **)error NS_SWIFT_NAME(transcribe(_:));
+- (nullable KWResult *)transcribeSamples:(NSData *)samples language:(NSString *)language translate:(BOOL)translate error:(NSError **)error NS_SWIFT_NAME(transcribe(_:language:translate:));
 - (void)cancel;
 - (void)resetCancellation;
 @end

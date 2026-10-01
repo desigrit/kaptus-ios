@@ -2,7 +2,25 @@
 
 This is a development preview for real-device testing. It has been compiled and tested with Apple's toolchain on a macOS runner. No physical iPhone or theater test has been performed in this Windows workspace.
 
-## Verified on September 22, 2026
+## Multilingual activation, 0.2.1 build 3
+
+[Successful activation run](https://github.com/desigrit/kaptus-ios/actions/runs/36801226995), source commit `faeabf9`, completed on September 30, 2026 (October 1 UTC) with Xcode 26.3, Swift 6.2.4 and iPhone 17 Pro Simulator on iOS 26.2. All 70 automated tests passed: 40 core tests, 25 native tests and 5 SwiftUI tests. The unsigned arm64 iPhone Release target compiled, the bundled English/VAD models and privacy manifest passed verification, and the committed generated Xcode project byte-matches the compiled project.
+
+The default policy now enables Mandarin, Japanese, Spanish, French, German, Korean, Hindi, Telugu and Tamil audio to English captions after the shared multilingual model is downloaded and verified. Additional regressions cover all nine entry paths, a missing model without microphone requests, verified cached-model readiness on a cold launch, cached Hindi-English playback without a helper download, serial helper recognition, shared-file role preservation, and background or late model readiness requiring explicit Re-sync.
+
+All six [native screenshots](screenshots/README.md) were refreshed from this run. Their provenance records the source commit and individual SHA-256 digests.
+
+These automated checks verify implementation behavior. They do not measure the new languages' real speech accuracy, physical-phone speed or room-speaker performance. The multilingual matching fixtures inject original synthetic recognition results; the native recognizer integration test continues exercising the actual bundled English model. See [the language matrix and testing protocol](MULTILINGUAL.md) before evaluating the new paths on a real phone.
+
+## Multilingual 0.2.0 changes
+
+[Successful multilingual run](https://github.com/desigrit/kaptus-ios/actions/runs/36779217955), source commit `01567cd`, completed on September 30, 2026 with Xcode 26.3 and iPhone 17 Pro Simulator on iOS 26.2. All 62 automated tests passed: 40 core tests, 17 native tests and 5 SwiftUI tests. The unsigned arm64 iPhone Release target compiled, the English/VAD model digests passed bundle verification, and the committed generated Xcode project byte-matches the compiled project.
+
+New checks exercise provider-language variants and the 69-language offline catalog, cache migration/isolation and shared-file roles, UTF-8/CJK/Indic normalization, optional model integrity/resume/cancellation, stale recognition sessions, helper timing/cut validation, direct translation ambiguity and unsupported-language microphone gating. Native UI tests exercise manual Arabic captions, rotation and separate language controls at the largest accessibility size. Screenshots were refreshed from this run.
+
+These tests verify software behavior, not multilingual speech accuracy. The recorded run predates the subsequent activation of the nine requested foreign-audio to English pairs. Those pairs now require a verified shared model rather than physical-device qualification. Their accuracy and speed remain unmeasured on hardware. See [the language matrix](MULTILINGUAL.md) for availability and the testing protocol. The English-only baseline below is retained as historical evidence.
+
+## English-only baseline verified on September 22, 2026
 
 [Successful final run](https://github.com/desigrit/kaptus-ios/actions/runs/35718030052), commit `9bd303f`, Xcode 26.3 (17C529), Swift 6.2.4, iPhone 17 Pro Simulator running iOS 26.2. All 35 tests passed.
 
