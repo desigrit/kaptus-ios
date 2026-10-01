@@ -8,7 +8,7 @@
 
 A little screen for the words you don't want to miss. Kaptus puts large, quiet captions on your iPhone while a movie or TV episode plays on another screen.
 
-Choose a title or open an SRT file, then pick the caption and spoken languages. English audio with English captions can find your place on the phone and switch off the microphone. Other combinations use the same quiet player with manual timing. The words keep moving with the story.
+Choose a title or open an SRT file, then pick the caption and spoken languages. English captions can find your place while listening to English, Mandarin, Japanese, Spanish, French, German, Korean, Hindi, Telugu or Tamil audio. The nine additional spoken languages share one optional model download. Other combinations use the same quiet player with manual timing. The words keep moving with the story.
 
 This is the native SwiftUI sibling of [Kaptus for Android](https://github.com/desigrit/kaptus), with the same yellow Wordbird and a distinctly iPhone experience.
 
@@ -51,7 +51,7 @@ bash scripts/bootstrap.sh
 open Kaptus.xcodeproj
 ```
 
-Select your Apple development team under **Signing & Capabilities**, choose your connected iPhone, and press Run. The first setup downloads and verifies the recognizer source and speech models. The English recognizer models are bundled, so English auto-seek needs no phone-side download. Settings offers one optional, verified 190 MB multilingual evaluation model shared across the target languages.
+Select your Apple development team under **Signing & Capabilities**, choose your connected iPhone, and press Run. The first setup downloads and verifies the recognizer source and speech models. The English recognizer models are bundled, so English auto-seek needs no phone-side download. Settings offers one optional, verified 190 MB multilingual speech model shared across the target languages.
 
 Start with **Try a sample** to explore the player. Its dialogue is original demonstration text. Then open your own SRT or [set up your OpenSubtitles key](docs/OPENSUBTITLES.md).
 
@@ -67,7 +67,7 @@ Each person uses their own [OpenSubtitles.com](https://www.opensubtitles.com) ac
 
 ## A few honest limits
 
-Caption playback supports provider-available languages. English audio with English captions retains auto-seek. Mandarin, Japanese, Spanish, French, German, Korean, Hindi, Telugu and Tamil audio to English are implemented as evaluation paths and remain manual in production until real-device validation. Downloading the optional model does not enable unvalidated pairs. See the [language matrix and validation gates](docs/MULTILINGUAL.md). Kaptus does not create missing captions or identify an unknown film.
+Caption playback supports provider-available languages. English audio with English captions retains auto-seek. Mandarin, Japanese, Spanish, French, German, Korean, Hindi, Telugu and Tamil audio to English are enabled after the optional multilingual model is downloaded and verified. Other combinations use manual timing. These new paths have not been benchmarked for speech accuracy or speed on physical phones. See the [language matrix and testing protocol](docs/MULTILINGUAL.md). Kaptus does not create missing captions or identify an unknown film.
 
 A different cut, background conversation, quiet dialogue, or repeated lines can prevent a match. Tap Re-sync during a clear sentence, try another track, or set the timeline yourself. Timing is estimated from recognized words and SRT cues, so this is not a promise of frame-perfect alignment.
 

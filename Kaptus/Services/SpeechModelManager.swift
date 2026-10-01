@@ -45,7 +45,7 @@ final class SpeechModelManager: ObservableObject {
         Task { await verifyExisting() }
     }
     func verifyExisting() async {
-        guard !isDownloading else { return }
+        guard !isDownloading, !isReady else { return }
         let url = root.appendingPathComponent(artifact.filename), token = generation, spec = artifact
         let valid = await Task.detached(priority: .utility) { (try? Self.verify(url, artifact: spec)) == true }.value
         guard generation == token, !isDownloading else { return }

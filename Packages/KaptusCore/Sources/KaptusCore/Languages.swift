@@ -118,29 +118,29 @@ public enum AutoSeekCapability: Equatable, Sendable {
     case ready, modelRequired, manual(String)
     public var canListen: Bool { self == .ready }
 }
-/// No foreign-language path ships as validated until physical-device evidence is reviewed.
+/// Explicitly supported language paths. Readiness and matching evidence remain separate checks.
 public struct AutoSeekPolicy: Sendable {
     private static let targets = Set(["zh", "ja", "es", "fr", "de", "ko", "hi", "te", "ta"])
-    private let validated: Set<String>
-    public init(validatedPairs: Set<String> = []) { validated = validatedPairs }
-    public static let production = Self()
+    private let enabledPaths: Set<String>
+    public init(enabledPaths: Set<String> = []) { self.enabledPaths = enabledPaths }
+    public static let production = evaluation(languages: targets)
     public static func evaluation(languages: Set<String>) -> Self {
-        Self(validatedPairs: Set(languages.flatMap { ["\($0):helper", "\($0):translated"] }))
+        Self(enabledPaths: Set(languages.flatMap { ["\($0):helper", "\($0):translated"] }))
     }
     public func capability(_ profile: LanguageProfile, modelReady: Bool, hasHelper: Bool = false) -> AutoSeekCapability {
         guard profile.captionLanguage == "en" else { return .manual("Auto-seek is available only with English captions. Use the timeline for this language combination.") }
         if profile.spokenLanguage == "en" { return modelReady ? .ready : .modelRequired }
         guard Self.targets.contains(profile.spokenLanguage) else { return .manual("Use the timeline to start these captions. Auto-seek is not available for this spoken language.") }
-        let helperReady = hasHelper && validated.contains("\(profile.spokenLanguage):helper")
-        let translationReady = validated.contains("\(profile.spokenLanguage):translated")
+        let helperReady = hasHelper && enabledPaths.contains("\(profile.spokenLanguage):helper")
+        let translationReady = enabledPaths.contains("\(profile.spokenLanguage):translated")
         guard helperReady || translationReady else {
-            return .manual("Manual timing. Auto-seek for this language is awaiting real-device validation.")
+            return .manual("Auto-seek is not enabled for this language. Use the timeline for manual timing.")
         }
         return modelReady ? .ready : .modelRequired
     }
     public func allows(_ profile: LanguageProfile, path: MatchingPath) -> Bool {
         if path == .english { return profile == LanguageProfile() }
-        return profile.captionLanguage == "en" && Self.targets.contains(profile.spokenLanguage) && validated.contains("\(profile.spokenLanguage):\(path.rawValue)")
+        return profile.captionLanguage == "en" && Self.targets.contains(profile.spokenLanguage) && enabledPaths.contains("\(profile.spokenLanguage):\(path.rawValue)")
     }
 }
 public struct TrackTimeMapping: Codable, Sendable {

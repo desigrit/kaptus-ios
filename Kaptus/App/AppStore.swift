@@ -1,4 +1,5 @@
 import SwiftUI
+import Combine
 import KaptusCore
 
 @MainActor
@@ -10,6 +11,7 @@ final class AppStore: ObservableObject {
     @Published var pendingImportURL: URL?
     @Published var languageCatalogNotice: String?
     let models = SpeechModelManager()
+    private var modelObservation: AnyCancellable?
     private let catalog = LanguageCatalog()
     let autoSeekPolicy = AutoSeekPolicy.production
     @Published var history: [SavedCaptions] = []
@@ -28,6 +30,14 @@ final class AppStore: ObservableObject {
     init(preview: Bool = false) {
         previewMode = preview
         onboardingComplete = preview || UserDefaults.standard.bool(forKey: "onboardingComplete")
+        modelObservation = models.objectWillChange.sink { [weak self] in
+            // Published changes arrive before their value is assigned. Read on the next main-actor turn.
+            Task { @MainActor [weak self] in
+                guard let self else { return }
+                self.player?.updateMultilingualModelPath(self.models.path)
+                self.objectWillChange.send()
+            }
+        }
         if !preview {
             do { credentials = try KeychainStore.load() }
             catch { errorMessage = String(localized: "Your saved provider details couldn't be read. Open Settings to add them again.") }
@@ -68,6 +78,11 @@ final class AppStore: ObservableObject {
     func open(_ item: SavedCaptions) async {
         do {
             let tracks = try await library.open(item)
+            // A saved foreign-language item may be opened while launch-time verification is pending.
+            // This verifies the private file only; native initialization stays inside the listening deadline.
+            if autoSeekPolicy.allows(item.languages, path: .translated) || autoSeekPolicy.allows(item.languages, path: .helper) {
+                await models.verifyExisting()
+            }
             player?.close()
             player = PlayerSession(title: item.movie.title, tracks: tracks, languages: item.languages, capabilityPolicy: autoSeekPolicy, multilingualModelPath: models.path)
             player?.onValidatedMapping = { [library] mapping in Task { try? await library.saveMapping(mapping) } }

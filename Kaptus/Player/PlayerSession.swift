@@ -9,11 +9,12 @@ final class PlayerSession: ObservableObject, Identifiable {
     let demonstration: Bool
     let languages: LanguageProfile
     private let capabilityPolicy: AutoSeekPolicy
-    private let multilingualModelPath: String?
+    @Published private var multilingualModelPath: String?
     var onValidatedMapping: ((TrackTimeMapping) -> Void)?
     private var crossMatcher: CrossLanguageMatcher?
     var capability: AutoSeekCapability { capabilityPolicy.capability(languages, modelReady: languages.spokenLanguage == "en" ? WhisperWorker.modelsReady : multilingualModelPath != nil, hasHelper: tracks.contains { $0.0.role == .matchingHelper }) }
     var canAutoSeek: Bool { capability.canListen }
+    var usesMultilingualAutoSeek: Bool { capabilityPolicy.allows(languages, path: .helper) || capabilityPolicy.allows(languages, path: .translated) }
     @Published private(set) var state: SyncState = .idle
     @Published private(set) var position: Double = 0
     @Published private(set) var activeCaption = ""
@@ -67,6 +68,14 @@ final class PlayerSession: ObservableObject, Identifiable {
             self?.controlsVisible = true
         }
     }
+    func updateMultilingualModelPath(_ path: String?) {
+        guard multilingualModelPath != path else { return }
+        multilingualModelPath = path
+        if path == nil && languages.spokenLanguage != "en" && state.isAcquiring {
+            stopAcquisition(); state = .manual; controlsVisible = true
+        }
+        // Becoming ready only enables explicit Re-sync. It never starts a late initial attempt.
+    }
     func startInitial() {
         guard !hasStarted else { return }
         hasStarted = true
@@ -89,7 +98,9 @@ final class PlayerSession: ObservableObject, Identifiable {
         attempt = UUID(); let token = attempt
         accumulator = TranscriptAccumulator(); microphoneDenied = false
         crossMatcher = CrossLanguageMatcher(profile: languages, policy: capabilityPolicy, tracks: tracks)
-        speech.configure(.init(sessionID: token, sourceLanguage: languages.spokenLanguage, model: languages.spokenLanguage == "en" ? .english : .multilingual, tasks: languages.spokenLanguage == "en" ? [.transcription] : [.transcription, .translation], modelPath: multilingualModelPath))
+        let hasHelper = tracks.contains { $0.0.role == .matchingHelper }
+        let tasks: [RecognitionTask] = languages.spokenLanguage == "en" ? [.transcription] : (hasHelper && capabilityPolicy.allows(languages, path: .helper) ? [.transcription, .translation] : [.translation])
+        speech.configure(.init(sessionID: token, sourceLanguage: languages.spokenLanguage, model: languages.spokenLanguage == "en" ? .english : .multilingual, tasks: tasks, modelPath: multilingualModelPath))
         state = .loading; controlsVisible = true
         acquisition = Task { [weak self] in
             guard let self else { return }
@@ -123,7 +134,7 @@ final class PlayerSession: ObservableObject, Identifiable {
             }
             do {
                 try await self.speech.start()
-                guard !Task.isCancelled, self.attempt == token else { self.speech.stop(); return }
+                guard !Task.isCancelled, self.attempt == token, self.isForeground else { self.speech.stop(); return }
             } catch {
                 guard !Task.isCancelled, self.attempt == token else { return }
                 self.speech.stop(); self.timeout?.cancel()

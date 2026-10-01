@@ -1101,16 +1101,6 @@
         }
       }
     },
-    "Manual timing is available for every language. New auto-seek languages remain manual until device testing is complete.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Manual timing is available for every language. New auto-seek languages remain manual until device testing is complete."
-          }
-        }
-      }
-    },
     "Open captions": {
       "localizations": {
         "en": {
@@ -1127,26 +1117,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "Caption languages"
-          }
-        }
-      }
-    },
-    "One optional model, shared by all target languages.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "One optional model, shared by all target languages."
-          }
-        }
-      }
-    },
-    "Mandarin, Japanese, Spanish, French, German, Korean, Hindi, Telugu and Tamil auto-seek are awaiting real-device validation. Installing this model does not enable them yet.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Mandarin, Japanese, Spanish, French, German, Korean, Hindi, Telugu and Tamil auto-seek are awaiting real-device validation. Installing this model does not enable them yet."
           }
         }
       }
@@ -1187,16 +1157,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "Download multilingual model (190 MB)"
-          }
-        }
-      }
-    },
-    "Optional download for language evaluation. Interrupted downloads can be resumed.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Optional download for language evaluation. Interrupted downloads can be resumed."
           }
         }
       }
@@ -1341,16 +1301,6 @@
         }
       }
     },
-    "Manual timing. Auto-seek for this language is awaiting real-device validation.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Manual timing. Auto-seek for this language is awaiting real-device validation."
-          }
-        }
-      }
-    },
     "%lld saved": {
       "localizations": {
         "en": {
@@ -1381,22 +1331,132 @@
         }
       }
     },
-    "Up to %lld provider downloads. Saved files are reused. Manual captions work offline; auto-seek also requires a ready model and validated language pair.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Up to %lld provider downloads. Saved files are reused. Manual captions work offline; auto-seek also requires a ready model and validated language pair."
-          }
-        }
-      }
-    },
     "Original multilingual sample": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
             "value": "Original multilingual sample"
+          }
+        }
+      }
+    },
+    "Download the multilingual speech model, then tap Re-sync. Your saved captions also work with manual timing.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Download the multilingual speech model, then tap Re-sync. Your saved captions also work with manual timing."
+          }
+        }
+      }
+    },
+    "Tap Re-sync to find your place": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tap Re-sync to find your place"
+          }
+        }
+      }
+    },
+    "Speech model needed": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Speech model needed"
+          }
+        }
+      }
+    },
+    "Offline auto-seek ready": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Offline auto-seek ready"
+          }
+        }
+      }
+    },
+    "Captions saved · Speech model needed": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Captions saved · Speech model needed"
+          }
+        }
+      }
+    },
+    "Captions saved · Manual timing": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Captions saved · Manual timing"
+          }
+        }
+      }
+    },
+    "Manual timing is available for every language. Auto-seek works with English captions and supported spoken languages. Other languages use the timeline.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Manual timing is available for every language. Auto-seek works with English captions and supported spoken languages. Other languages use the timeline."
+          }
+        }
+      }
+    },
+    "One download, shared by nine spoken languages.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "One download, shared by nine spoken languages."
+          }
+        }
+      }
+    },
+    "Download this model to find your place in English captions while listening to Mandarin, Japanese, Spanish, French, German, Korean, Hindi, Telugu or Tamil audio.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Download this model to find your place in English captions while listening to Mandarin, Japanese, Spanish, French, German, Korean, Hindi, Telugu or Tamil audio."
+          }
+        }
+      }
+    },
+    "Download once, then use auto-seek offline. English audio needs no extra download. Interrupted downloads can be resumed.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Download once, then use auto-seek offline. English audio needs no extra download. Interrupted downloads can be resumed."
+          }
+        }
+      }
+    },
+    "Auto-seek is not enabled for this language. Use the timeline for manual timing.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Auto-seek is not enabled for this language. Use the timeline for manual timing."
+          }
+        }
+      }
+    },
+    "Up to %lld provider downloads. Saved files are reused. Manual captions work offline; auto-seek also requires a ready model and supported language pair.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Up to %lld provider downloads. Saved files are reused. Manual captions work offline; auto-seek also requires a ready model and supported language pair."
           }
         }
       }

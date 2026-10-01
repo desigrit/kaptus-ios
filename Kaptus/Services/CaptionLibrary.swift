@@ -26,7 +26,7 @@ actor CaptionLibrary {
         let previous = items
         var item = items.first { $0.movie.id == movie.id && $0.languages == languages } ?? SavedCaptions(movie: movie, tracks: [], languages: languages)
         let oldTrack = item.tracks.first { $0.metadata.id == track.id && $0.role == role }
-        item.tracks.removeAll { $0.metadata.id == track.id }
+        item.tracks.removeAll { $0.metadata.id == track.id && $0.role == role }
         item.tracks.append(savedTrack); item.lastOpened = Date()
         items.removeAll { $0.id == item.id }; items.insert(item, at: 0)
         do { try persist() }

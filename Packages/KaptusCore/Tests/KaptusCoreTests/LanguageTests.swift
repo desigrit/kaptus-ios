@@ -11,25 +11,35 @@ final class LanguageTests: XCTestCase {
         XCTAssertEqual(languages["pt-pt"], "Portuguese (Portugal)")
         XCTAssertNotNil(languages["zh-cn"]); XCTAssertNotNil(languages["zh-tw"])
     }
-    func testProductionNeverEnablesUnvalidatedOrUnsupportedPairs() {
-        for source in ["zh", "ja", "es", "fr", "de", "ko", "hi", "te", "ta", "it", "und"] {
+    func testProductionEnablesRequestedPairsOnlyWithReadyModel() {
+        for source in ["zh", "ja", "es", "fr", "de", "ko", "hi", "te", "ta"] {
+            let profile = LanguageProfile(spokenLanguage: source)
+            for helper in [false, true] {
+                XCTAssertEqual(AutoSeekPolicy.production.capability(profile, modelReady: true, hasHelper: helper), .ready)
+                XCTAssertEqual(AutoSeekPolicy.production.capability(profile, modelReady: false, hasHelper: helper), .modelRequired)
+            }
+            XCTAssertTrue(AutoSeekPolicy.production.allows(profile, path: .helper))
+            XCTAssertTrue(AutoSeekPolicy.production.allows(profile, path: .translated))
+        }
+        for source in ["it", "ar", "und"] {
             for helper in [false, true] {
                 let capability = AutoSeekPolicy.production.capability(.init(spokenLanguage: source), modelReady: true, hasHelper: helper)
-                if case .manual = capability {} else { XCTFail("Unvalidated \(source) must remain manual") }
+                if case .manual = capability {} else { XCTFail("Unsupported source must remain manual") }
             }
         }
         XCTAssertEqual(AutoSeekPolicy.production.capability(.init(), modelReady: true), .ready)
         XCTAssertEqual(AutoSeekPolicy.production.capability(.init(), modelReady: false), .modelRequired)
         XCTAssertFalse(AutoSeekPolicy.production.capability(.init(captionLanguage: "ja"), modelReady: true).canListen)
+        XCTAssertFalse(AutoSeekPolicy.production.allows(.init(captionLanguage: "hi", spokenLanguage: "hi"), path: .translated))
     }
     func testEvaluationIsScopedByPathAndCaptionLanguage() {
-        let policy = AutoSeekPolicy(validatedPairs: ["es:helper"])
+        let policy = AutoSeekPolicy(enabledPaths: ["es:helper"])
         XCTAssertEqual(policy.capability(.init(spokenLanguage: "es"), modelReady: false, hasHelper: true), .modelRequired)
         XCTAssertEqual(policy.capability(.init(spokenLanguage: "es"), modelReady: true, hasHelper: true), .ready)
         XCTAssertFalse(policy.allows(.init(spokenLanguage: "es"), path: .translated))
         XCTAssertFalse(policy.allows(.init(captionLanguage: "fr", spokenLanguage: "es"), path: .helper))
         XCTAssertFalse(AutoSeekPolicy.evaluation(languages: ["it"]).allows(.init(spokenLanguage: "it"), path: .translated))
-        XCTAssertEqual(AutoSeekPolicy(validatedPairs: ["es:translated"]).capability(.init(spokenLanguage: "es"), modelReady: true, hasHelper: true), .ready)
+        XCTAssertEqual(AutoSeekPolicy(enabledPaths: ["es:translated"]).capability(.init(spokenLanguage: "es"), modelReady: true, hasHelper: true), .ready)
     }
     func testNearSearchStillRejectsDistantRepeatedDialogue() {
         let text = "Bring the silver telescope to the abandoned ancient observatory"

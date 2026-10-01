@@ -8,7 +8,7 @@ This is a development preview for real-device testing. It has been compiled and 
 
 New checks exercise provider-language variants and the 69-language offline catalog, cache migration/isolation and shared-file roles, UTF-8/CJK/Indic normalization, optional model integrity/resume/cancellation, stale recognition sessions, helper timing/cut validation, direct translation ambiguity and unsupported-language microphone gating. Native UI tests exercise manual Arabic captions, rotation and separate language controls at the largest accessibility size. Screenshots were refreshed from this run.
 
-These tests verify software behavior, not multilingual speech accuracy. No new spoken-language pair has physical-device qualification, and all nine remain manual in production. See [the language matrix](MULTILINGUAL.md) for activation requirements. The English-only baseline below is retained as historical evidence.
+These tests verify software behavior, not multilingual speech accuracy. The recorded run predates the subsequent activation of the nine requested foreign-audio to English pairs. Those pairs now require a verified shared model rather than physical-device qualification. Their accuracy and speed remain unmeasured on hardware. See [the language matrix](MULTILINGUAL.md) for availability and the testing protocol. The English-only baseline below is retained as historical evidence.
 
 ## English-only baseline verified on September 22, 2026
 

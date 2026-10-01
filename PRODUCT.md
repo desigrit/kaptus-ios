@@ -2,7 +2,7 @@
 
 Kaptus is a personal caption companion for people who rely on captions. Choose a film or TV episode, or open an SRT from Files. The app listens briefly, finds the dialogue in the captions on the device, then stops the microphone and follows the movie with a monotonic clock.
 
-Audience: people who are hard of hearing, watching a screen across a room or in a cinema. Captions in provider-available languages, with independent caption and spoken choices. Existing English speech to English captions auto-seek is retained. Nine new translated auto-seek pairs are implemented for evaluation and remain manual until physical-device validation. iPhone first, iOS 17 and newer.
+Audience: people who are hard of hearing, watching a screen across a room or in a cinema. Captions in provider-available languages, with independent caption and spoken choices. Existing English speech to English captions auto-seek is retained. Mandarin, Japanese, Spanish, French, German, Korean, Hindi, Telugu and Tamil audio to English captions are enabled with one optional verified model download. Other combinations use manual timing. Physical-phone accuracy and speed remain unmeasured. iPhone first, iOS 17 and newer.
 
 Tasks: import, search and prepare, find your place, read quietly, adjust timing, resume after switching apps. Captions remain useful offline. There is no cloud transcription and no unknown-movie identification.
 

@@ -62,7 +62,7 @@ struct SettingsView: View {
                         ScrollView { Text(notices).font(.footnote).textSelection(.enabled).padding() }.navigationTitle("Notices")
                     }
                     Link("Kaptus on GitHub", destination: URL(string: "https://github.com/desigrit/kaptus-ios")!)
-                    LabeledContent("Version", value: "0.2.0 Preview")
+                    LabeledContent("Version", value: "0.2.1 Preview")
                 }
                 if !credentials.apiKey.isEmpty {
                     Section {

@@ -28,7 +28,7 @@ for path in list((root / "Kaptus").rglob("*.swift")) + list((root / "Packages/Ka
 for value in [
     "%lld saved", "%lld% downloaded",
     "Up to %lld provider downloads: display captions and any matching helper.",
-    "Up to %lld provider downloads. Saved files are reused. Manual captions work offline; auto-seek also requires a ready model and validated language pair."
+    "Up to %lld provider downloads. Saved files are reused. Manual captions work offline; auto-seek also requires a ready model and supported language pair."
 ]:
     data["strings"].setdefault(value, {"localizations": {"en": {"stringUnit": {"state": "translated", "value": value}}}})
 catalog.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")

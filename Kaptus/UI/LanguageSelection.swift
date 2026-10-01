@@ -36,7 +36,7 @@ struct ImportLanguageView: View {
                     Text("Tell us the language in this file and the language you hear. Unknown files still work with manual timing.")
                 }
                 Section {
-                    Text("Manual timing is available for every language. New auto-seek languages remain manual until device testing is complete.").font(.footnote).foregroundStyle(.secondary)
+                    Text("Manual timing is available for every language. Auto-seek works with English captions and supported spoken languages. Other languages use the timeline.").font(.footnote).foregroundStyle(.secondary)
                     Button("Open captions") {
                         store.pendingImportURL = nil; dismiss()
                         Task { await store.importFile(url, languages: profile) }
@@ -52,8 +52,8 @@ struct MultilingualModelSettings: View {
     @ObservedObject var models: SpeechModelManager
     var body: some View {
         Section {
-            Text("One optional model, shared by all target languages.").font(.subheadline)
-            Text("Mandarin, Japanese, Spanish, French, German, Korean, Hindi, Telugu and Tamil auto-seek are awaiting real-device validation. Installing this model does not enable them yet.")
+            Text("One download, shared by nine spoken languages.").font(.subheadline)
+            Text("Download this model to find your place in English captions while listening to Mandarin, Japanese, Spanish, French, German, Korean, Hindi, Telugu or Tamil audio.")
                 .font(.footnote).foregroundStyle(.secondary)
             if models.isDownloading {
                 ProgressView(value: models.progress)
@@ -64,7 +64,7 @@ struct MultilingualModelSettings: View {
                 Button("Delete multilingual model", role: .destructive) { models.delete() }.frame(minHeight: 44)
             } else {
                 Button("Download multilingual model (190 MB)") { models.download() }.frame(minHeight: 44)
-                Text("Optional download for language evaluation. Interrupted downloads can be resumed.").font(.footnote).foregroundStyle(.secondary)
+                Text("Download once, then use auto-seek offline. English audio needs no extra download. Interrupted downloads can be resumed.").font(.footnote).foregroundStyle(.secondary)
             }
             if let message = models.errorMessage { Text(message).font(.footnote).foregroundStyle(.secondary) }
         } header: { Text("Multilingual speech model") }

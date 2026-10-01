@@ -152,10 +152,13 @@ struct PreparationView: View {
                             PrimaryAction(title: "Watch now", symbol: "play.fill") { Task { await prepare(count: 1, open: true) } }
                             Text("Up to \(1 + (helper == nil ? 0 : 1)) provider downloads: display captions and any matching helper.").font(.footnote).foregroundStyle(.secondary)
                             SecondaryAction(title: "Prepare for theater", symbol: "arrow.down.circle") { Task { await prepare(count: min(3, tracks.count), open: false) } }
-                            Text("Up to \(min(3, tracks.count) + (helper == nil ? 0 : 1)) provider downloads. Saved files are reused. Manual captions work offline; auto-seek also requires a ready model and validated language pair.")
+                            Text("Up to \(min(3, tracks.count) + (helper == nil ? 0 : 1)) provider downloads. Saved files are reused. Manual captions work offline; auto-seek also requires a ready model and supported language pair.")
                                 .font(.footnote).foregroundStyle(.secondary)
                         }
                     }
+                }
+                if readiness == .modelRequired && store.autoSeekPolicy.allows(languages, path: .translated) {
+                    MultilingualModelSettings(models: store.models)
                 }
                 if let errorMessage {
                     Section {

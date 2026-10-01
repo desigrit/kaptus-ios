@@ -18,7 +18,7 @@ Prepared alternative tracks use the same transcript. Listening never silently co
 
 CaptionLanguage preserves provider codes. LanguageProfile separates displayed captions from spoken audio and is saved per film or episode. Catalog caching is independent of credentials. StoredTrack roles and content hashes separate display alternatives from source matching helpers; legacy JSON decodes as English display tracks. Valid cached content is reusable across logical roles without another provider download.
 
-RecognitionConfiguration selects model, source language, session and serial transcription/translation tasks. Foreign evaluation windows are eight seconds with a four-second stride. Source and translated results remain separate and are paired by window identity. Native byte assembly prevents partial UTF-8 BPE tokens from being discarded. Translation preserves decoded utterance intervals rather than word timestamps. CrossLanguageMatcher requires independent windows, English cross-checking, whole-track ambiguity rejection, and hash-bound local helper mappings. AutoSeekPolicy blocks microphone permission and loading for unsupported or unvalidated pairs. See MULTILINGUAL.md for rollout gates.
+RecognitionConfiguration selects model, source language, session and serial transcription/translation tasks. Foreign-language windows are eight seconds with a four-second stride. Source and translated results remain separate and are paired by window identity. Native byte assembly prevents partial UTF-8 BPE tokens from being discarded. Translation preserves decoded utterance intervals rather than word timestamps. CrossLanguageMatcher requires independent windows, English cross-checking, whole-track ambiguity rejection, and hash-bound local helper mappings. AutoSeekPolicy enables the nine requested foreign-audio to English pairs, while blocking microphone permission and loading for unsupported combinations or a missing model. A cached title needs no helper download: translation alone can acquire its English display captions. Source transcription runs only when a saved helper is available. See MULTILINGUAL.md for availability and testing.
 
 ## Time and lifecycle
 
@@ -30,7 +30,7 @@ The core includes a tested drift estimator for future use, but the first iOS pla
 
 ## Build and tests
 
-The fetch script contains source and model SHA-256 digests. The native build creates a static XCFramework for arm64 iPhones and arm64/x86_64 simulators, with embedded Metal shaders. Both model files are copied into the app. The English models need no runtime download. A shared multilingual evaluation model can be explicitly downloaded, resumed, verified and removed in Settings. Transfer and file I/O run in a separate actor, with bounded progress updates on the main actor.
+The fetch script contains source and model SHA-256 digests. The native build creates a static XCFramework for arm64 iPhones and arm64/x86_64 simulators, with embedded Metal shaders. Both model files are copied into the app. The English models need no runtime download. A shared multilingual speech model can be explicitly downloaded, resumed, verified and removed in Settings. Transfer and file I/O run in a separate actor, with bounded progress updates on the main actor.
 
 project.yml is the XcodeGen source of truth. bootstrap.sh verifies dependencies and regenerates Kaptus.xcodeproj.
 

@@ -33,6 +33,20 @@ final class ModelDownloadTests: XCTestCase {
         }
         XCTFail("Bounded fixture download did not finish")
     }
+    func testVerifiedCachedArtifactIsReadyOnColdLaunchWithoutDownload() async throws {
+        let root = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: root) }
+        let data = Data("original verified cached model fixture".utf8)
+        let path = root.appendingPathComponent("fixture.bin")
+        try data.write(to: path)
+        let manager = fixture(root, data: data)
+        await manager.verifyExisting()
+        XCTAssertTrue(manager.isReady)
+        XCTAssertEqual(manager.path, path.path)
+        XCTAssertFalse(manager.isDownloading)
+        XCTAssertNil(manager.errorMessage)
+    }
     func testVerifiedDownloadAndDelete() async throws {
         let root = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
         defer { try? FileManager.default.removeItem(at: root) }
